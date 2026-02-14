@@ -1,0 +1,217 @@
+name: Mobile Build Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile-build.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'mobile/**'
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    name: Build iOS
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: mobile/ios
+
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: npm ci
+
+      - name: Install pods
+        working-directory: mobile/ios
+        run: |
+          pod repo update
+          pod install
+
+      - name: Build iOS
+        working-directory: mobile
+        run: |
+          xcodebuild \
+            -workspace ios/HRPlatform.xcworkspace \
+            -scheme HRPlatform \
+            -configuration Release \
+            -derivedDataPath build \
+            -arch arm64 \
+            -allowProvisioningUpdates
+
+      - name: Create IPA
+        working-directory: mobile
+        run: |
+          mkdir -p build/ipa
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/HRPlatform.xcarchive \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportPath build/ipa
+
+      - name: Upload to TestFlight
+        if: github.ref == 'refs/heads/develop'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcrun altool --upload-app \
+            -f build/ipa/HRPlatform.ipa \
+            -t ios \
+            -u "$APPLE_ID" \
+            -p "$APPLE_PASSWORD" \
+            --team-id "$TEAM_ID"
+
+      - name: Upload iOS build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-build
+          path: mobile/build/ipa/
+
+  build-android:
+    runs-on: ubuntu-latest
+    name: Build Android
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 33
+          build-tools-version: 33.0.2
+
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: npm ci
+
+      - name: Decode signing key
+        working-directory: mobile/android
+        env:
+          SIGNING_KEY: ${{ secrets.ANDROID_SIGNING_KEY }}
+        run: |
+          echo "$SIGNING_KEY" | base64 -d > app/signing-key.jks
+
+      - name: Build Android (Debug)
+        working-directory: mobile
+        if: github.event_name == 'pull_request'
+        run: npm run build:android -- -PtargetVariant=debug
+
+      - name: Build Android (Release)
+        working-directory: mobile
+        if: github.event_name == 'push'
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
+        run: npm run build:android -- -PtargetVariant=release
+
+      - name: Upload to Google Play (Internal Testing)
+        if: github.ref == 'refs/heads/develop'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.hrplatform.app
+          releaseFiles: mobile/android/app/build/outputs/bundle/release/app-release.aab
+          track: internal
+          inAppUpdatePriority: 5
+
+      - name: Upload to Google Play (Production)
+        if: github.ref == 'refs/heads/main'
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.hrplatform.app
+          releaseFiles: mobile/android/app/build/outputs/bundle/release/app-release.aab
+          track: production
+          inAppUpdatePriority: 3
+
+      - name: Upload Android build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-build
+          path: mobile/android/app/build/outputs/
+
+      - name: Comment PR with build status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Mobile builds completed successfully!\n\n- [Download iOS Build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n- [Download Android Build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+            })
+
+  test-mobile:
+    runs-on: ubuntu-latest
+    name: Test Mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: npm ci
+
+      - name: Run tests
+        working-directory: mobile
+        run: npm test -- --coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./mobile/coverage/coverage-final.json
+          flags: mobile
+
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: mobile
+        run: npm run lint
+
+      - name: TypeScript check
+        working-directory: mobile
+        run: npm run typecheck

@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/vercel_app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/vercel_app.py"
+    }
+  ],
+  "env": {
+    "DATABASE_URL": "sqlite+aiosqlite:///./hr_platform.db",
+    "DATABASE_SYNC_URL": "sqlite:///./hr_platform.db",
+    "JWT_SECRET": "change-this-in-production",
+    "REDIS_URL": "mock://localhost",
+    "RABBITMQ_URL": "mock://localhost",
+    "DEBUG": "false",
+    "ENABLE_AI_PARSING": "false",
+    "ENABLE_EMAIL_NOTIFICATIONS": "false"
+  }
+}

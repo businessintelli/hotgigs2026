@@ -1,0 +1,58 @@
+{
+  "name": "hr-platform",
+  "displayName": "HR Platform",
+  "expo": {
+    "name": "HR Platform",
+    "slug": "hr-platform",
+    "version": "1.0.0",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.hrplatform.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.hrplatform.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_CONTACTS",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "plugins": [
+      [
+        "@react-native-firebase/app",
+        {
+          "detectCustomOptions": true
+        }
+      ],
+      [
+        "@react-native-firebase/messaging",
+        {
+          "default_notification_channel": "default"
+        }
+      ],
+      [
+        "react-native-reanimated/plugin",
+        {
+          "globals": ["__frameTimestamp"]
+        }
+      ]
+    ],
+    "scheme": "hrplatform"
+  },
+  "react-native": {
+    "app": "src",
+    "android": {
+      "compileSdkVersion": 33,
+      "targetSdkVersion": 33,
+      "minSdkVersion": 21
+    }
+  }
+}
