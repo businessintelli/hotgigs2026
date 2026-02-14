@@ -1,0 +1,41 @@
+# ══════════════════════════════════════════════════════════════════════
+# HotGigs 2026 - Lightweight Docker (SQLite, no infra)
+# Perfect for quick testing and demos
+# Usage:
+#   docker compose -f docker-compose.lite.yml up -d --build
+# ══════════════════════════════════════════════════════════════════════
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: hotgigs-lite
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./data/hotgigs.db
+      - DATABASE_SYNC_URL=sqlite:///./data/hotgigs.db
+      - REDIS_URL=mock://localhost
+      - RABBITMQ_URL=mock://localhost
+      - JWT_SECRET=dev-secret-key-change-in-prod
+      - DEBUG=true
+      - ENABLE_AI_PARSING=false
+      - ENABLE_EMAIL_NOTIFICATIONS=false
+      - SEED_DATA=true
+    volumes:
+      - lite_data:/app/data
+    command: >
+      python test_server.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  lite_data:
+    driver: local

@@ -1,0 +1,69 @@
+# ── Core Framework ───────────────────────────────────────────────────
+fastapi>=0.104.0,<1.0.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+python-dotenv>=1.0.0
+jinja2>=3.1.2
+click>=8.1.0
+
+# ── Database & ORM ───────────────────────────────────────────────────
+sqlalchemy[asyncio]>=2.0.23
+asyncpg>=0.29.0
+aiosqlite>=0.19.0
+alembic>=1.12.0
+psycopg2-binary>=2.9.9
+
+# ── Pydantic & Validation ───────────────────────────────────────────
+pydantic>=2.5.0,<3.0.0
+pydantic-settings>=2.1.0
+email-validator>=2.1.0
+
+# ── Auth & Security ─────────────────────────────────────────────────
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+bcrypt>=4.1.0
+
+# ── HTTP Clients ─────────────────────────────────────────────────────
+httpx>=0.25.0
+requests>=2.31.0
+
+# ── Message Queue & Cache ────────────────────────────────────────────
+redis>=5.0.1
+aio-pika>=9.4.0
+
+# ── AI Providers ─────────────────────────────────────────────────────
+openai>=1.3.0
+anthropic>=0.7.0
+
+# ── Search Engine ────────────────────────────────────────────────────
+elasticsearch>=8.11.0
+elasticsearch-dsl>=8.11.0
+
+# ── Cloud & Storage ──────────────────────────────────────────────────
+boto3>=1.34.0
+
+# ── Email ────────────────────────────────────────────────────────────
+sendgrid>=6.10.0
+
+# ── Messaging Integrations ──────────────────────────────────────────
+slack-sdk>=3.26.0
+pymsteams>=0.2.2
+
+# ── Payment Processing ──────────────────────────────────────────────
+stripe>=7.0.0
+
+# ── QuickBooks Integration ──────────────────────────────────────────
+intuit-oauth>=1.2.6
+python-quickbooks>=0.9.7
+
+# ── PDF & Reports ───────────────────────────────────────────────────
+weasyprint>=60.0
+
+# ── Logging & Monitoring ────────────────────────────────────────────
+python-json-logger>=2.0.7
+pytz>=2023.3
+
+# ── Testing (optional, included for dev) ────────────────────────────
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
