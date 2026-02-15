@@ -78,6 +78,8 @@ app.add_middleware(
 )
 
 # ── Database Setup ────────────────────────────────────────────────────
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
 _engine = None
@@ -119,7 +121,52 @@ async def _get_engine():
                 await conn.run_sync(Base.metadata.create_all)
         except Exception as e:
             print(f"Table creation: {e}")
+        # Auto-seed test users
+        try:
+            await _seed_test_users(_engine)
+        except Exception as e:
+            print(f"Seeding: {e}")
     return _engine
+
+async def _seed_test_users(engine):
+    """Seed demo users on every cold start (SQLite in /tmp is ephemeral)."""
+    from passlib.context import CryptContext
+    from sqlalchemy import text
+    pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    from datetime import datetime
+    now = datetime.utcnow()
+    users = [
+        (1, "admin@hotgigs.ai", "Platform", "Admin", pwd.hash("admin123456"), "ADMIN"),
+        (2, "recruiter@hotgigs.ai", "Jane", "Recruiter", pwd.hash("recruiter123456"), "RECRUITER"),
+        (3, "demo@hrplatform.com", "Demo", "User", pwd.hash("demo123456"), "RECRUITER"),
+    ]
+    async with async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)() as session:
+        for uid, email, fn, ln, pw, role in users:
+            await session.execute(text(
+                "INSERT OR IGNORE INTO users (id, email, first_name, last_name, hashed_password, role, is_active, created_at, updated_at) "
+                "VALUES (:id, :email, :fn, :ln, :pw, :role, 1, :now, :now)"
+            ), {"id": uid, "email": email, "fn": fn, "ln": ln, "pw": pw, "role": role, "now": now})
+        # Sample customers
+        for cid, name, ind in [(1, "TechCorp Solutions", "Technology"), (2, "FinanceHub Global", "Finance"), (3, "HealthFirst Inc", "Healthcare")]:
+            await session.execute(text(
+                "INSERT OR IGNORE INTO customers (id, name, industry, is_active, created_at, updated_at) "
+                "VALUES (:id, :name, :ind, 1, :now, :now)"
+            ), {"id": cid, "name": name, "ind": ind, "now": now})
+        await session.commit()
+    print("Seeded test users and customers")
+
+# ── Ensure DB is initialized on EVERY request ────────────────────────
+class _DBInitMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: StarletteRequest, call_next):
+        await _get_engine()
+        return await call_next(request)
+
+app.add_middleware(_DBInitMiddleware)
+
+# ── Also init on startup (if Vercel calls it) ────────────────────────
+@app.on_event("startup")
+async def _startup():
+    await _get_engine()
 
 # ── Core Routes ───────────────────────────────────────────────────────
 @app.get("/")
