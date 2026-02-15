@@ -20,7 +20,7 @@ import {
   DocumentTextIcon,
   CheckCircleIcon,
   SparklesIcon,
-  TrendingUpIcon,
+  ArrowArrowTrendingUpIcon,
   CalendarIcon,
 } from '@heroicons/react/24/outline';
 
@@ -97,7 +97,7 @@ export const Dashboard: React.FC = () => {
                 color="primary"
               />
               <KPICard
-                icon={<TrendingUpIcon className="w-full h-full" />}
+                icon={<ArrowTrendingUpIcon className="w-full h-full" />}
                 label="Fill Rate"
                 value={`${overview.fill_rate_percentage}%`}
                 color="success"
