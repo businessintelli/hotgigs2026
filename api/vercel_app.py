@@ -184,6 +184,24 @@ try:
 except Exception:
     pass
 
+# ── Patch passlib to use bcrypt directly (avoids detect_wrap_bug crash) ──
+try:
+    import bcrypt as _bcrypt_lib
+    def _verify_pw(plain: str, hashed: str) -> bool:
+        try:
+            return _bcrypt_lib.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
+        except Exception:
+            return False
+    def _hash_pw(plain: str) -> str:
+        return _bcrypt_lib.hashpw(plain.encode("utf-8"), _bcrypt_lib.gensalt()).decode("utf-8")
+    import utils.security as _sec
+    _sec.verify_password = _verify_pw
+    _sec.hash_password = _hash_pw
+    _sec.pwd_context = None  # disable passlib entirely
+    print("Patched password functions to use bcrypt directly")
+except Exception as _pe:
+    print(f"bcrypt patch failed: {_pe}")
+
 # Also init on startup (if Vercel calls it)
 @app.on_event("startup")
 async def _startup():
