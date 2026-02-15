@@ -1,9 +1,11 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/vercel_app" }
+    { "source": "/(.*)", "destination": "/api/main" }
   ],
   "env": {
+    "VERCEL": "1",
+    "VERCEL_ENV": "production",
     "DATABASE_URL": "sqlite+aiosqlite:///tmp/hr_platform.db",
     "DATABASE_SYNC_URL": "sqlite:///tmp/hr_platform.db",
     "JWT_SECRET": "change-this-in-production",
