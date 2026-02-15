@@ -10,6 +10,14 @@ import { Dashboard } from '@/pages/Dashboard';
 import { Candidates } from '@/pages/Candidates';
 import { Requirements } from '@/pages/Requirements';
 import { Submissions } from '@/pages/Submissions';
+import { Interviews } from '@/pages/Interviews';
+import { Contracts } from '@/pages/Contracts';
+import { Suppliers } from '@/pages/Suppliers';
+import { Referrals } from '@/pages/Referrals';
+import { Copilot } from '@/pages/Copilot';
+import { Reports } from '@/pages/Reports';
+import { Settings } from '@/pages/Settings';
+import { Admin } from '@/pages/Admin';
 
 // Layout
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -66,38 +74,18 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/dashboard"
-            element={
-              <AuthenticatedLayout title="Dashboard">
-                <Dashboard />
-              </AuthenticatedLayout>
-            }
-          />
-          <Route
-            path="/candidates"
-            element={
-              <AuthenticatedLayout title="Candidates">
-                <Candidates />
-              </AuthenticatedLayout>
-            }
-          />
-          <Route
-            path="/requirements"
-            element={
-              <AuthenticatedLayout title="Requirements">
-                <Requirements />
-              </AuthenticatedLayout>
-            }
-          />
-          <Route
-            path="/submissions"
-            element={
-              <AuthenticatedLayout title="Submissions">
-                <Submissions />
-              </AuthenticatedLayout>
-            }
-          />
+          <Route path="/dashboard" element={<AuthenticatedLayout title="Dashboard"><Dashboard /></AuthenticatedLayout>} />
+          <Route path="/candidates" element={<AuthenticatedLayout title="Candidates"><Candidates /></AuthenticatedLayout>} />
+          <Route path="/requirements" element={<AuthenticatedLayout title="Requirements"><Requirements /></AuthenticatedLayout>} />
+          <Route path="/submissions" element={<AuthenticatedLayout title="Submissions"><Submissions /></AuthenticatedLayout>} />
+          <Route path="/interviews" element={<AuthenticatedLayout title="Interviews"><Interviews /></AuthenticatedLayout>} />
+          <Route path="/contracts" element={<AuthenticatedLayout title="Contracts"><Contracts /></AuthenticatedLayout>} />
+          <Route path="/suppliers" element={<AuthenticatedLayout title="Suppliers"><Suppliers /></AuthenticatedLayout>} />
+          <Route path="/referrals" element={<AuthenticatedLayout title="Referrals"><Referrals /></AuthenticatedLayout>} />
+          <Route path="/copilot" element={<AuthenticatedLayout title="AI Copilot"><Copilot /></AuthenticatedLayout>} />
+          <Route path="/reports" element={<AuthenticatedLayout title="Reports"><Reports /></AuthenticatedLayout>} />
+          <Route path="/settings" element={<AuthenticatedLayout title="Settings"><Settings /></AuthenticatedLayout>} />
+          <Route path="/admin" element={<AuthenticatedLayout title="Admin"><Admin /></AuthenticatedLayout>} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

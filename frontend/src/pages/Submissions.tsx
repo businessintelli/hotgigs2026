@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardBody, CardHeader } from '@/components/common/Card';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import { useApi } from '@/hooks/useApi';
@@ -26,7 +25,7 @@ export const Submissions: React.FC = () => {
 
   if (listView) {
     return (
-      <AppLayout title="Submissions">
+      <>
         <div className="p-4 md:p-6 space-y-6 pb-8">
           <div className="flex justify-end">
             <button
@@ -80,12 +79,12 @@ export const Submissions: React.FC = () => {
             </CardBody>
           </Card>
         </div>
-      </AppLayout>
+      </>
     );
   }
 
   return (
-    <AppLayout title="Submissions">
+    <>
       <div className="p-4 md:p-6 space-y-6 pb-8">
         <div className="flex justify-between items-center">
           <div>
@@ -154,6 +153,6 @@ export const Submissions: React.FC = () => {
           ))}
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 };

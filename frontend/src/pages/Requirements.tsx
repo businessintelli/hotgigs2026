@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardBody, CardHeader } from '@/components/common/Card';
 import { DataTable } from '@/components/common/DataTable';
 import { SearchInput } from '@/components/common/SearchInput';
@@ -73,7 +72,7 @@ export const Requirements: React.FC = () => {
   ];
 
   return (
-    <AppLayout title="Requirements">
+    <>
       <div className="p-4 md:p-6 space-y-6 pb-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -213,6 +212,6 @@ export const Requirements: React.FC = () => {
           </button>
         </div>
       </Modal>
-    </AppLayout>
+    </>
   );
 };

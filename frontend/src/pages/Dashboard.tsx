@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardBody, CardHeader } from '@/components/common/Card';
 import { KPICard } from '@/components/common/KPICard';
 import { LoadingSpinner, Skeleton } from '@/components/common/LoadingSpinner';
@@ -56,7 +55,6 @@ export const Dashboard: React.FC = () => {
   );
 
   return (
-    <AppLayout title="Dashboard">
       <div className="p-4 md:p-6 space-y-6 pb-8">
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -273,6 +271,5 @@ export const Dashboard: React.FC = () => {
           </CardBody>
         </Card>
       </div>
-    </AppLayout>
   );
 };

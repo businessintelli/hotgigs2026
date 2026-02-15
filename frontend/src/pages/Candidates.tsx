@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { AppLayout } from '@/components/layout/AppLayout';
 import { DataTable } from '@/components/common/DataTable';
 import { SearchInput } from '@/components/common/SearchInput';
 import { StatusBadge } from '@/components/common/StatusBadge';
@@ -49,7 +48,7 @@ export const Candidates: React.FC = () => {
   ];
 
   return (
-    <AppLayout title="Candidates">
+    <>
       <div className="p-4 md:p-6 space-y-6 pb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -106,6 +105,6 @@ export const Candidates: React.FC = () => {
           }
         />
       </div>
-    </AppLayout>
+    </>
   );
 };
