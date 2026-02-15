@@ -20,7 +20,7 @@ import {
   DocumentTextIcon,
   CheckCircleIcon,
   SparklesIcon,
-  ArrowArrowTrendingUpIcon,
+  ArrowTrendingUpIcon,
   CalendarIcon,
 } from '@heroicons/react/24/outline';
 
