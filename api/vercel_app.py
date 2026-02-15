@@ -318,16 +318,38 @@ async def debug_login():
         steps["1_engine"] = f"FAIL: {e}"
         return {"steps": steps, "traceback": traceback.format_exc()}
 
-    # Step 2: Check users table
+    # Step 1b: Check tables exist
     try:
         from sqlalchemy import text
+        async with engine.begin() as conn:
+            tables = await conn.execute(text("SELECT name FROM sqlite_master WHERE type='table'"))
+            steps["1b_tables"] = [r[0] for r in tables]
+    except Exception as e:
+        steps["1b_tables"] = f"FAIL: {e}"
+
+    # Step 2: Check users table
+    try:
         async with engine.begin() as conn:
             rows = await conn.execute(text("SELECT id, email, role, is_active FROM users"))
             users = [dict(r._mapping) for r in rows]
         steps["2_users_in_db"] = users
     except Exception as e:
         steps["2_users_in_db"] = f"FAIL: {e}"
-        return {"steps": steps, "traceback": traceback.format_exc()}
+        steps["2_traceback"] = traceback.format_exc()
+
+    # Step 2b: Force seed if empty
+    if not users if isinstance(steps.get("2_users_in_db"), list) else True:
+        try:
+            await _seed_test_users(engine)
+            steps["2b_seed"] = "SEEDED"
+            # Re-check
+            async with engine.begin() as conn:
+                rows = await conn.execute(text("SELECT id, email, role, is_active FROM users"))
+                users = [dict(r._mapping) for r in rows]
+            steps["2c_users_after_seed"] = users
+        except Exception as e:
+            steps["2b_seed"] = f"FAIL: {e}"
+            steps["2b_traceback"] = traceback.format_exc()
 
     # Step 3: Load user via ORM
     try:
