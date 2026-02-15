@@ -78,8 +78,6 @@ app.add_middleware(
 )
 
 # ── Database Setup ────────────────────────────────────────────────────
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request as StarletteRequest
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
 _engine = None
@@ -136,9 +134,9 @@ async def _seed_test_users(engine):
     from datetime import datetime
     now = datetime.utcnow()
     users = [
-        (1, "admin@hotgigs.ai", "Platform", "Admin", pwd.hash("admin123456"), "ADMIN"),
-        (2, "recruiter@hotgigs.ai", "Jane", "Recruiter", pwd.hash("recruiter123456"), "RECRUITER"),
-        (3, "demo@hrplatform.com", "Demo", "User", pwd.hash("demo123456"), "RECRUITER"),
+        (1, "admin@hotgigs.ai", "Platform", "Admin", pwd.hash("admin123456"), "admin"),
+        (2, "recruiter@hotgigs.ai", "Jane", "Recruiter", pwd.hash("recruiter123456"), "recruiter"),
+        (3, "demo@hrplatform.com", "Demo", "User", pwd.hash("demo123456"), "recruiter"),
     ]
     async with async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)() as session:
         for uid, email, fn, ln, pw, role in users:
@@ -156,14 +154,36 @@ async def _seed_test_users(engine):
     print("Seeded test users and customers")
 
 # ── Ensure DB is initialized on EVERY request ────────────────────────
-class _DBInitMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: StarletteRequest, call_next):
-        await _get_engine()
-        return await call_next(request)
+# Override get_db dependency so it always inits DB first
+from typing import AsyncGenerator
+async def _vercel_get_db() -> AsyncGenerator[AsyncSession, None]:
+    """get_db replacement that ensures engine is initialised on Vercel."""
+    await _get_engine()                       # idempotent
+    async with _session_factory() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
 
-app.add_middleware(_DBInitMiddleware)
+# Patch both the module-level function AND the FastAPI dependency
+try:
+    import database.connection as _dbc
+    _orig_get_db = _dbc.get_db          # save original for dependency_overrides
+    _dbc.get_db = _vercel_get_db
+    import database as _dbm
+    _dbm.get_db = _vercel_get_db
+    # CRITICAL: also patch the already-imported reference in api.dependencies
+    try:
+        import api.dependencies as _adeps
+        _adeps.get_db = _vercel_get_db
+    except Exception:
+        pass
+    # Use FastAPI dependency_overrides as belt-and-suspenders
+    app.dependency_overrides[_orig_get_db] = _vercel_get_db
+except Exception:
+    pass
 
-# ── Also init on startup (if Vercel calls it) ────────────────────────
+# Also init on startup (if Vercel calls it)
 @app.on_event("startup")
 async def _startup():
     await _get_engine()
