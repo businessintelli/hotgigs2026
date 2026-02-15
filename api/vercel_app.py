@@ -1,8 +1,8 @@
 """Vercel serverless entry point for the HR Platform.
 
-This creates a self-contained FastAPI app that mocks unavailable
-infrastructure (Redis, RabbitMQ, Elasticsearch, etc.) so the API
-can run in a serverless environment with just SQLite.
+Uses Vercel's native ASGI support for FastAPI.
+Mocks unavailable infrastructure packages with real classes
+so Vercel's runtime issubclass() checks work correctly.
 """
 import sys
 import os
@@ -17,10 +17,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-# ── 2. Set environment defaults ──────────────────────────────────────
+# ── 2. Set environment defaults (use /tmp for writable SQLite on Vercel)
 defaults = {
-    "DATABASE_URL": "sqlite+aiosqlite:///./hr_platform.db",
-    "DATABASE_SYNC_URL": "sqlite:///./hr_platform.db",
+    "DATABASE_URL": "sqlite+aiosqlite:///tmp/hr_platform.db",
+    "DATABASE_SYNC_URL": "sqlite:///tmp/hr_platform.db",
     "REDIS_URL": "mock://localhost",
     "RABBITMQ_URL": "mock://localhost",
     "DEBUG": "false",
@@ -31,25 +31,38 @@ defaults = {
 for k, v in defaults.items():
     os.environ.setdefault(k, v)
 
-# ── 3. Mock unavailable packages ─────────────────────────────────────
-# These packages aren't installed on Vercel but are imported throughout
-# the codebase. We inject lightweight stubs so imports don't crash.
+# ── 3. Mock unavailable packages with REAL CLASSES ────────────────────
+# Critical: Vercel's runtime uses issubclass() to inspect handlers.
+# Mock objects must be real classes/types, not arbitrary objects.
+
+class _MockBase:
+    """A real class that acts as a no-op stand-in."""
+    def __init__(self, *a, **kw): pass
+    def __call__(self, *a, **kw): return self
+    def __getattr__(self, name):
+        if name.startswith('_'):
+            raise AttributeError(name)
+        return _MockBase
+    def __await__(self):
+        async def _noop(): return None
+        return _noop().__await__()
 
 def _make_mock_module(name):
-    """Create a mock module that returns no-op objects for any attribute."""
+    """Create a mock module whose attributes are real classes."""
     mod = types.ModuleType(name)
-    class _MockClass:
-        def __init__(self, *a, **kw): pass
-        def __call__(self, *a, **kw): return self
-        def __getattr__(self, _): return _MockClass()
-        def __await__(self):
-            async def _noop(): return None
-            return _noop().__await__()
-    mod.__dict__['__getattr__'] = lambda attr: _MockClass()
-    mod.__dict__['__path__'] = []
+    mod.__path__ = []
+    mod.__package__ = name
+
+    def _module_getattr(attr):
+        # Return a dynamically created real class
+        return type(attr, (_MockBase,), {
+            '__init__': lambda self, *a, **kw: None,
+            '__call__': lambda self, *a, **kw: _MockBase(),
+        })
+
+    mod.__getattr__ = _module_getattr
     return mod
 
-# Packages to mock - these are infrastructure deps not needed for serverless
 _packages_to_mock = [
     "redis", "redis.asyncio", "redis.exceptions",
     "aio_pika", "aio_pika.abc",
@@ -59,6 +72,7 @@ _packages_to_mock = [
     "intuit_oauth", "quickbooks", "python_quickbooks",
     "weasyprint",
     "asyncpg", "asyncpg.exceptions",
+    "spacy",
 ]
 
 for pkg in _packages_to_mock:
@@ -69,9 +83,9 @@ logger.info("Mocked unavailable packages for serverless environment")
 
 # ── 4. Patch settings ────────────────────────────────────────────────
 import importlib
-mod = importlib.import_module("config.settings")
-if hasattr(mod, "get_settings") and hasattr(mod.get_settings, "cache_clear"):
-    mod.get_settings.cache_clear()
+settings_mod = importlib.import_module("config.settings")
+if hasattr(settings_mod, "get_settings") and hasattr(settings_mod.get_settings, "cache_clear"):
+    settings_mod.get_settings.cache_clear()
 from config.settings import Settings
 new_settings = Settings()
 sys.modules["config.settings"].__dict__["settings"] = new_settings
@@ -81,7 +95,7 @@ sys.modules["config"].__dict__["settings"] = new_settings
 import database.connection as db_conn
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
-_db_url = os.environ.get("DATABASE_URL", "sqlite+aiosqlite:///./hr_platform.db")
+_db_url = os.environ.get("DATABASE_URL", "sqlite+aiosqlite:///tmp/hr_platform.db")
 
 async def init_db_vercel():
     db_conn.engine = create_async_engine(
@@ -160,8 +174,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+_db_initialized = False
+
 @app.on_event("startup")
 async def startup():
+    global _db_initialized
+    if _db_initialized:
+        return
     try:
         await init_db_vercel()
         from database.base import Base
@@ -181,6 +200,7 @@ async def startup():
                 logger.warning(f"Skipped model {m}: {ex}")
         async with db_conn.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+        _db_initialized = True
         logger.info("Vercel startup: DB initialized, tables created")
     except Exception as e:
         logger.error(f"Vercel startup error: {e}")
@@ -211,7 +231,7 @@ async def health():
         "checks": {"database": db_health},
     }
 
-# ── 8. Load API routes with graceful fallback ────────────────────────
+# ── 8. Load API routes ───────────────────────────────────────────────
 loaded_routers = []
 failed_routers = []
 
@@ -224,20 +244,17 @@ except Exception as e:
     logger.warning(f"Full V1 router failed: {e}. Loading individual routes...")
     failed_routers.append(("v1_full", str(e)))
 
-    # Try loading individual routers
     route_modules = [
-        ("auth", "Authentication"),
-        ("dashboard", "Dashboard"),
-        ("interviews", "Interviews"),
-        ("matching", "Matching"),
-        ("offers", "Offers"),
-        ("resumes", "Resumes"),
-        ("submissions", "Submissions"),
-        ("suppliers", "Suppliers"),
-        ("job_posts", "Job Posts"),
-        ("clients", "Clients"),
-        ("contracts", "Contracts"),
-        ("candidates", "Candidate Portal"),
+        ("auth", "Authentication"), ("dashboard", "Dashboard"),
+        ("interviews", "Interviews"), ("matching", "Matching"),
+        ("offers", "Offers"), ("resumes", "Resumes"),
+        ("submissions", "Submissions"), ("suppliers", "Suppliers"),
+        ("job_posts", "Job Posts"), ("clients", "Clients"),
+        ("contracts", "Contracts"), ("candidate_portal", "Candidate Portal"),
+        ("referrals", "Referrals"), ("negotiations", "Negotiations"),
+        ("security", "Security"), ("admin", "Admin"),
+        ("messaging", "Messaging"), ("payments", "Payments"),
+        ("timesheets", "Timesheets"), ("invoices", "Invoices"),
     ]
 
     for module_name, tag in route_modules:
@@ -248,7 +265,6 @@ except Exception as e:
                 loaded_routers.append(module_name)
         except Exception as ex:
             failed_routers.append((module_name, str(ex)))
-            logger.warning(f"Skipped router {module_name}: {ex}")
 
 @app.get("/api/v1/status")
 async def api_status():
@@ -260,8 +276,4 @@ async def api_status():
 
 @app.exception_handler(Exception)
 async def error_handler(request, exc):
-    logger.error(f"Unhandled error: {exc}")
     return JSONResponse(status_code=500, content={"detail": str(exc), "type": type(exc).__name__})
-
-# ── Vercel handler ───────────────────────────────────────────────────
-handler = app
