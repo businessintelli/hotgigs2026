@@ -47,8 +47,8 @@ for p in [
         _mock(p)
 
 # ── Environment ───────────────────────────────────────────────────────
-os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///tmp/hotgigs.db")
-os.environ.setdefault("DATABASE_SYNC_URL", "sqlite:///tmp/hotgigs.db")
+os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:////tmp/hotgigs.db")
+os.environ.setdefault("DATABASE_SYNC_URL", "sqlite:////tmp/hotgigs.db")
 os.environ.setdefault("REDIS_URL", "mock://localhost")
 os.environ.setdefault("RABBITMQ_URL", "mock://localhost")
 os.environ.setdefault("JWT_SECRET", "vercel-dev-secret")
@@ -87,7 +87,7 @@ async def _get_engine():
     global _engine, _session_factory
     if _engine is None:
         _engine = create_async_engine(
-            "sqlite+aiosqlite:///tmp/hotgigs.db",
+            "sqlite+aiosqlite:////tmp/hotgigs.db",
             echo=False,
             connect_args={"check_same_thread": False},
         )
