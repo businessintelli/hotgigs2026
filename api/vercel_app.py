@@ -133,11 +133,13 @@ async def _seed_test_users(engine):
     now = datetime.utcnow()
     # Pre-computed bcrypt hashes (avoids passlib bug with newer bcrypt on Vercel)
     users = [
-        (1, "admin@hotgigs.ai", "Platform", "Admin", "$2b$12$oHxef0tI7e9ZfKU7TODviOcD5hW1Zq8VSJsUfPyJYwuR1k4bAFU5u", "admin"),
-        (2, "recruiter@hotgigs.ai", "Jane", "Recruiter", "$2b$12$vVXX452oQ4k0LraVLGZZ8e.F60syRIXa1XQgOA/f3CrN1iRMWSyq.", "recruiter"),
-        (3, "demo@hrplatform.com", "Demo", "User", "$2b$12$fjoS6UCzy9y4y.CFEUghne9LfNaRF2jU7ERAqEl0rlouiVJOOJEku", "recruiter"),
+        (1, "admin@hotgigs.ai", "Platform", "Admin", "$2b$12$oHxef0tI7e9ZfKU7TODviOcD5hW1Zq8VSJsUfPyJYwuR1k4bAFU5u", "ADMIN"),
+        (2, "recruiter@hotgigs.ai", "Jane", "Recruiter", "$2b$12$vVXX452oQ4k0LraVLGZZ8e.F60syRIXa1XQgOA/f3CrN1iRMWSyq.", "RECRUITER"),
+        (3, "demo@hrplatform.com", "Demo", "User", "$2b$12$fjoS6UCzy9y4y.CFEUghne9LfNaRF2jU7ERAqEl0rlouiVJOOJEku", "RECRUITER"),
     ]
     async with async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)() as session:
+        # Clear any stale seed data (e.g. from previous deploys with wrong role case)
+        await session.execute(text("DELETE FROM users WHERE id IN (1, 2, 3)"))
         for uid, email, fn, ln, pw, role in users:
             await session.execute(text(
                 "INSERT OR IGNORE INTO users (id, email, first_name, last_name, hashed_password, role, is_active, created_at, updated_at) "
