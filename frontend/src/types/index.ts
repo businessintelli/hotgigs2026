@@ -390,3 +390,146 @@ export interface AgentHealthStatus {
   error_message?: string;
   processing_queue_size: number;
 }
+
+// ============================================
+// VMS/MSP Multi-Tenant Types
+// ============================================
+
+export interface Organization {
+  id: number;
+  name: string;
+  slug: string;
+  org_type: 'msp' | 'client' | 'supplier';
+  logo_url?: string;
+  onboarding_status: string;
+  parent_org_id?: number;
+  primary_contact_name?: string;
+  primary_contact_email?: string;
+  primary_contact_phone?: string;
+  industry?: string;
+  website?: string;
+  tier?: string;
+  commission_rate?: number;
+  contract_start?: string;
+  contract_end?: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface OrganizationMembership {
+  id: number;
+  organization_id: number;
+  user_id: number;
+  role: string;
+  is_primary: boolean;
+  department?: string;
+  title?: string;
+  joined_at: string;
+  user_email?: string;
+  user_name?: string;
+}
+
+export interface RequirementDistribution {
+  id: number;
+  organization_id: number;
+  requirement_id: number;
+  supplier_org_id: number;
+  supplier_org_name?: string;
+  status: string;
+  distributed_at: string;
+  expires_at?: string;
+  max_submissions: number;
+  submission_count?: number;
+  notes_to_supplier?: string;
+}
+
+export interface SupplierSubmission {
+  id: number;
+  organization_id: number;
+  requirement_distribution_id: number;
+  candidate_id: number;
+  candidate_name?: string;
+  supplier_org_name?: string;
+  status: string;
+  bill_rate?: number;
+  pay_rate?: number;
+  availability_date?: string;
+  supplier_notes?: string;
+  quality_score?: number;
+  match_score?: number;
+  duplicate_flag?: string;
+  submitted_at: string;
+  created_at: string;
+}
+
+export interface MSPReview {
+  id: number;
+  supplier_submission_id: number;
+  reviewer_id: number;
+  reviewer_name?: string;
+  decision: string;
+  match_score?: number;
+  quality_rating?: number;
+  screening_notes?: string;
+  strengths?: string;
+  concerns?: string;
+  recommendation?: string;
+  forwarded_to_client_at?: string;
+  reviewed_at: string;
+}
+
+export interface ClientFeedback {
+  id: number;
+  supplier_submission_id: number;
+  client_user_id: number;
+  decision: string;
+  feedback_notes?: string;
+  rating?: number;
+  feedback_at: string;
+}
+
+export interface PlacementRecord {
+  id: number;
+  organization_id: number;
+  requirement_id: number;
+  candidate_id: number;
+  candidate_name?: string;
+  supplier_org_id: number;
+  supplier_org_name?: string;
+  client_org_id: number;
+  client_org_name?: string;
+  start_date: string;
+  end_date?: string;
+  bill_rate: number;
+  pay_rate: number;
+  msp_margin?: number;
+  status: string;
+  work_location?: string;
+  job_title?: string;
+  created_at: string;
+}
+
+export interface MSPDashboardMetrics {
+  total_clients: number;
+  total_suppliers: number;
+  active_requirements: number;
+  total_distributions: number;
+  pending_submissions: number;
+  submissions_this_month: number;
+  active_placements: number;
+  placements_this_month: number;
+  avg_submission_quality?: number;
+  fill_rate_percent?: number;
+}
+
+export interface SupplierScorecard {
+  supplier_org_id: number;
+  supplier_name: string;
+  tier?: string;
+  total_submissions: number;
+  approved_submissions: number;
+  rejected_submissions: number;
+  total_placements: number;
+  avg_quality_score?: number;
+  approval_rate?: number;
+}

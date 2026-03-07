@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, DateTime, JSON, Enum, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, DateTime, JSON, Enum, ForeignKey, Integer, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.base import BaseModel
 from models.enums import UserRole
 
 
 class User(BaseModel):
-    """Platform user model."""
+    """Platform user model — multi-tenant aware."""
 
     __tablename__ = "users"
 
@@ -21,11 +21,18 @@ class User(BaseModel):
         nullable=False,
         index=True,
     )
+    # Multi-tenancy: primary organization
+    organization_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("organizations.id"), nullable=True, index=True
+    )
     last_login: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
     extra_metadata: Mapped[Optional[dict]] = mapped_column("metadata", JSON, default=dict)
 
+    # Relationship to primary organization
+    organization = relationship("Organization", backref="users", foreign_keys=[organization_id])
+
     def __repr__(self) -> str:
-        return f"<User(id={self.id}, email={self.email}, role={self.role})>"
+        return f"<User(id={self.id}, email={self.email}, role={self.role}, org={self.organization_id})>"
 
     @property
     def full_name(self) -> str:

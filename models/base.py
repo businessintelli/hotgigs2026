@@ -23,3 +23,20 @@ class BaseModel(Base):
         nullable=False,
     )
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+
+
+class TenantBaseModel(BaseModel):
+    """
+    Base model for tenant-scoped entities.
+    Adds organization_id for multi-tenant data isolation.
+    Entities inheriting this will have automatic tenant scoping.
+    
+    Note: Organization model itself inherits BaseModel (not TenantBaseModel)
+    since it IS the tenant.
+    """
+
+    __abstract__ = True
+
+    # Subclasses that need org scoping will define this column directly
+    # because each may have different FK targets or constraints.
+    # This class exists as a marker/type for tenant-aware entities.

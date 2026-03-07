@@ -19,8 +19,21 @@ import { Reports } from '@/pages/Reports';
 import { Settings } from '@/pages/Settings';
 import { Admin } from '@/pages/Admin';
 
+// MSP Pages
+import { MSPDashboard } from '@/pages/msp/MSPDashboard';
+import { ClientsList } from '@/pages/msp/ClientsList';
+import { SuppliersList } from '@/pages/msp/SuppliersList';
+import { SubmissionsPipeline } from '@/pages/msp/SubmissionsPipeline';
+
+// Client Pages
+import { ClientDashboard } from '@/pages/client/ClientDashboard';
+
+// Supplier Pages
+import { SupplierDashboard } from '@/pages/supplier/SupplierDashboard';
+
 // Layout
 import { AppLayout } from '@/components/layout/AppLayout';
+import { OrgSwitcher } from '@/components/layout/OrgSwitcher';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,6 +73,14 @@ const AuthenticatedLayout: React.FC<{ children: React.ReactNode; title?: string 
   </ProtectedRoute>
 );
 
+// Placeholder component factory
+const PlaceholderPage = (pageName: string) => () => (
+  <div className="p-8">
+    <h1 className="text-2xl font-bold">{pageName}</h1>
+    <p className="text-neutral-500 mt-2">Coming soon</p>
+  </div>
+);
+
 function App() {
   const { verifyToken, isAuthenticated } = useAuthStore();
 
@@ -74,6 +95,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          
+          {/* Main Dashboard Routes */}
           <Route path="/dashboard" element={<AuthenticatedLayout title="Dashboard"><Dashboard /></AuthenticatedLayout>} />
           <Route path="/candidates" element={<AuthenticatedLayout title="Candidates"><Candidates /></AuthenticatedLayout>} />
           <Route path="/requirements" element={<AuthenticatedLayout title="Requirements"><Requirements /></AuthenticatedLayout>} />
@@ -86,6 +109,34 @@ function App() {
           <Route path="/reports" element={<AuthenticatedLayout title="Reports"><Reports /></AuthenticatedLayout>} />
           <Route path="/settings" element={<AuthenticatedLayout title="Settings"><Settings /></AuthenticatedLayout>} />
           <Route path="/admin" element={<AuthenticatedLayout title="Admin"><Admin /></AuthenticatedLayout>} />
+
+          {/* MSP Portal Routes */}
+          <Route path="/msp/dashboard" element={<AuthenticatedLayout title="MSP Dashboard"><MSPDashboard /></AuthenticatedLayout>} />
+          <Route path="/msp/clients" element={<AuthenticatedLayout title="Clients"><ClientsList /></AuthenticatedLayout>} />
+          <Route path="/msp/suppliers" element={<AuthenticatedLayout title="Suppliers"><SuppliersList /></AuthenticatedLayout>} />
+          <Route path="/msp/submissions" element={<AuthenticatedLayout title="Submissions Pipeline"><SubmissionsPipeline /></AuthenticatedLayout>} />
+          <Route path="/msp/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
+          <Route path="/msp/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
+          <Route path="/msp/distributions" element={<AuthenticatedLayout title="Distributions">{PlaceholderPage('Distributions')()}</AuthenticatedLayout>} />
+
+          {/* Client Portal Routes */}
+          <Route path="/client/dashboard" element={<AuthenticatedLayout title="Client Dashboard"><ClientDashboard /></AuthenticatedLayout>} />
+          <Route path="/client/requirements" element={<AuthenticatedLayout title="Requirements">{PlaceholderPage('Requirements')()}</AuthenticatedLayout>} />
+          <Route path="/client/requirements/new" element={<AuthenticatedLayout title="New Requirement">{PlaceholderPage('New Requirement')()}</AuthenticatedLayout>} />
+          <Route path="/client/submissions" element={<AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>} />
+          <Route path="/client/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
+          <Route path="/client/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
+          <Route path="/client/interviews" element={<AuthenticatedLayout title="Interviews">{PlaceholderPage('Interviews')()}</AuthenticatedLayout>} />
+
+          {/* Supplier Portal Routes */}
+          <Route path="/supplier/dashboard" element={<AuthenticatedLayout title="Supplier Dashboard"><SupplierDashboard /></AuthenticatedLayout>} />
+          <Route path="/supplier/opportunities" element={<AuthenticatedLayout title="Opportunities">{PlaceholderPage('Opportunities')()}</AuthenticatedLayout>} />
+          <Route path="/supplier/submissions" element={<AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>} />
+          <Route path="/supplier/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
+          <Route path="/supplier/performance" element={<AuthenticatedLayout title="Performance">{PlaceholderPage('Performance')()}</AuthenticatedLayout>} />
+          <Route path="/supplier/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
+
+          {/* Default Routes */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

@@ -1,6 +1,22 @@
 from enum import Enum
 
 
+class OrganizationType(str, Enum):
+    """Type of organization in the MSP ecosystem."""
+    MSP = "msp"
+    CLIENT = "client"
+    SUPPLIER = "supplier"
+
+
+class OrgOnboardingStatus(str, Enum):
+    """Onboarding status for organizations."""
+    NEW = "new"
+    PENDING_REVIEW = "pending_review"
+    ACTIVE = "active"
+    SUSPENDED = "suspended"
+    OFFBOARDED = "offboarded"
+
+
 class RequirementStatus(str, Enum):
     """Status of a job requirement."""
     DRAFT = "draft"
@@ -99,10 +115,26 @@ class SupplierTier(str, Enum):
     SILVER = "silver"
     BRONZE = "bronze"
     NEW = "new"
+    STANDARD = "standard"
 
 
 class UserRole(str, Enum):
-    """Role of a platform user."""
+    """Role of a platform user — expanded for multi-tenant VMS/MSP."""
+    # Platform-level
+    PLATFORM_ADMIN = "platform_admin"
+    # MSP roles
+    MSP_ADMIN = "msp_admin"
+    MSP_MANAGER = "msp_manager"
+    MSP_RECRUITER = "msp_recruiter"
+    # Client roles
+    CLIENT_ADMIN = "client_admin"
+    CLIENT_MANAGER = "client_manager"
+    CLIENT_VIEWER = "client_viewer"
+    # Supplier roles
+    SUPPLIER_ADMIN = "supplier_admin"
+    SUPPLIER_RECRUITER = "supplier_recruiter"
+    SUPPLIER_VIEWER = "supplier_viewer"
+    # Legacy (keep for backward compatibility)
     ADMIN = "admin"
     MANAGER = "manager"
     RECRUITER = "recruiter"
@@ -267,3 +299,77 @@ class QBSyncStatus(str, Enum):
     PENDING = "pending"
     SYNCED = "synced"
     ERROR = "error"
+
+
+# --- VMS/MSP Workflow Enums ---
+
+class DistributionStatus(str, Enum):
+    """Status of requirement distribution to a supplier."""
+    ACTIVE = "active"
+    EXPIRED = "expired"
+    REVOKED = "revoked"
+    FILLED = "filled"
+    DECLINED = "declined"
+
+
+class VMSSubmissionStatus(str, Enum):
+    """Status of a supplier submission through the VMS pipeline."""
+    SUBMITTED = "submitted"
+    UNDER_MSP_REVIEW = "under_msp_review"
+    MSP_APPROVED = "msp_approved"
+    MSP_REJECTED = "msp_rejected"
+    CHANGES_REQUESTED = "changes_requested"
+    SUBMITTED_TO_CLIENT = "submitted_to_client"
+    CLIENT_SHORTLISTED = "client_shortlisted"
+    CLIENT_REJECTED = "client_rejected"
+    INTERVIEW = "interview"
+    OFFER = "offer"
+    PLACED = "placed"
+    WITHDRAWN = "withdrawn"
+
+
+class MSPReviewDecision(str, Enum):
+    """MSP review decision on a supplier submission."""
+    APPROVE = "approve"
+    REJECT = "reject"
+    REQUEST_CHANGES = "request_changes"
+
+
+class ClientFeedbackDecision(str, Enum):
+    """Client feedback on MSP-submitted candidate."""
+    SHORTLIST = "shortlist"
+    REJECT = "reject"
+    INTERVIEW = "interview"
+    HOLD = "hold"
+
+
+class PlacementStatus(str, Enum):
+    """Status of a placement."""
+    ACTIVE = "active"
+    COMPLETED = "completed"
+    TERMINATED = "terminated"
+    EXTENDED = "extended"
+
+
+class TimesheetFrequency(str, Enum):
+    """Timesheet submission frequency."""
+    WEEKLY = "weekly"
+    BIWEEKLY = "biweekly"
+    MONTHLY = "monthly"
+
+
+class AuditAction(str, Enum):
+    """Audit trail action types."""
+    CREATE = "create"
+    UPDATE = "update"
+    DELETE = "delete"
+    LOGIN = "login"
+    LOGOUT = "logout"
+    SWITCH_ORG = "switch_org"
+    DISTRIBUTE = "distribute"
+    SUBMIT = "submit"
+    REVIEW = "review"
+    APPROVE = "approve"
+    REJECT = "reject"
+    FORWARD = "forward"
+    FEEDBACK = "feedback"

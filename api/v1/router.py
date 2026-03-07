@@ -32,6 +32,10 @@ from api.v1 import (
     payments,
     timesheets,
     invoices,
+    organizations,
+    msp,
+    client_portal,
+    supplier_portal,
 )
 
 logger = logging.getLogger(__name__)
@@ -86,6 +90,12 @@ router.include_router(security.router, tags=["Security & RBAC"])
 router.include_router(admin.router, tags=["Administration"])
 router.include_router(cicd.router, tags=["CI/CD & Deployment"])
 
+# ── Multi-Tenant VMS/MSP ──
+router.include_router(organizations.router, tags=["Organizations & Tenancy"])
+router.include_router(msp.router, tags=["MSP Portal"])
+router.include_router(client_portal.router, tags=["Client Portal"])
+router.include_router(supplier_portal.router, tags=["Supplier Portal"])
+
 
 @router.get("", tags=["Status"])
 async def v1_status():
@@ -105,9 +115,10 @@ async def v1_status():
             "messaging": ["messaging"],
             "financial": ["payments", "timesheets", "invoices"],
             "admin": ["alerts", "security", "admin", "cicd"],
+            "vms_msp": ["organizations", "msp", "client_portal", "supplier_portal"],
         },
-        "total_agents": 32,
-        "total_api_modules": 27,
+        "total_agents": 37,
+        "total_api_modules": 31,
     }
 
 

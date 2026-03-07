@@ -127,32 +127,155 @@ async def _get_engine():
     return _engine
 
 async def _seed_test_users(engine):
-    """Seed demo users on every cold start (SQLite in /tmp is ephemeral)."""
+    """Seed multi-tenant demo data on every cold start (SQLite in /tmp is ephemeral)."""
     from sqlalchemy import text
     from datetime import datetime
+    from utils.security import hash_password
+    
     now = datetime.utcnow()
-    # Pre-computed bcrypt hashes (avoids passlib bug with newer bcrypt on Vercel)
-    users = [
-        (1, "admin@hotgigs.ai", "Platform", "Admin", "$2b$12$oHxef0tI7e9ZfKU7TODviOcD5hW1Zq8VSJsUfPyJYwuR1k4bAFU5u", "ADMIN"),
-        (2, "recruiter@hotgigs.ai", "Jane", "Recruiter", "$2b$12$vVXX452oQ4k0LraVLGZZ8e.F60syRIXa1XQgOA/f3CrN1iRMWSyq.", "RECRUITER"),
-        (3, "demo@hrplatform.com", "Demo", "User", "$2b$12$fjoS6UCzy9y4y.CFEUghne9LfNaRF2jU7ERAqEl0rlouiVJOOJEku", "RECRUITER"),
-    ]
+    
     async with async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)() as session:
-        # Clear any stale seed data (e.g. from previous deploys with wrong role case)
-        await session.execute(text("DELETE FROM users WHERE id IN (1, 2, 3)"))
-        for uid, email, fn, ln, pw, role in users:
-            await session.execute(text(
-                "INSERT OR IGNORE INTO users (id, email, first_name, last_name, hashed_password, role, is_active, created_at, updated_at) "
-                "VALUES (:id, :email, :fn, :ln, :pw, :role, 1, :now, :now)"
-            ), {"id": uid, "email": email, "fn": fn, "ln": ln, "pw": pw, "role": role, "now": now})
-        # Sample customers
-        for cid, name, ind in [(1, "TechCorp Solutions", "Technology"), (2, "FinanceHub Global", "Finance"), (3, "HealthFirst Inc", "Healthcare")]:
-            await session.execute(text(
-                "INSERT OR IGNORE INTO customers (id, name, industry, is_active, created_at, updated_at) "
-                "VALUES (:id, :name, :ind, 1, :now, :now)"
-            ), {"id": cid, "name": name, "ind": ind, "now": now})
+        # Clear stale seed data
+        await session.execute(text("DELETE FROM organization_memberships"))
+        await session.execute(text("DELETE FROM organizations"))
+        await session.execute(text("DELETE FROM users WHERE id IN (1, 2, 3, 4, 5, 6, 7)"))
+        
+        # Create Organizations
+        # 1. MSP Organization
+        await session.execute(text(
+            "INSERT INTO organizations (id, name, slug, org_type, onboarding_status, "
+            "primary_contact_name, primary_contact_email, industry, is_active, created_at, updated_at) "
+            "VALUES (:id, :name, :slug, :type, :status, :contact_name, :contact_email, :industry, 1, :now, :now)"
+        ), {
+            "id": 1, "name": "HotGigs MSP", "slug": "hotgigs-msp", "type": "MSP",
+            "status": "ACTIVE", "contact_name": "Raj Patel", "contact_email": "admin@hotgigs.ai",
+            "industry": "Staffing & Recruitment", "now": now
+        })
+        
+        # 2. Client Organization
+        await session.execute(text(
+            "INSERT INTO organizations (id, name, slug, org_type, onboarding_status, "
+            "primary_contact_name, primary_contact_email, industry, parent_org_id, is_active, created_at, updated_at) "
+            "VALUES (:id, :name, :slug, :type, :status, :contact_name, :contact_email, :industry, :parent_id, 1, :now, :now)"
+        ), {
+            "id": 2, "name": "TechCorp Inc", "slug": "techcorp-inc", "type": "CLIENT",
+            "status": "ACTIVE", "contact_name": "Sarah Johnson", "contact_email": "admin@techcorp.com",
+            "industry": "Technology", "parent_id": 1, "now": now
+        })
+        
+        # 3. Supplier Organization
+        await session.execute(text(
+            "INSERT INTO organizations (id, name, slug, org_type, onboarding_status, "
+            "primary_contact_name, primary_contact_email, industry, tier, parent_org_id, is_active, created_at, updated_at) "
+            "VALUES (:id, :name, :slug, :type, :status, :contact_name, :contact_email, :industry, :tier, :parent_id, 1, :now, :now)"
+        ), {
+            "id": 3, "name": "StaffPro Solutions", "slug": "staffpro-solutions", "type": "SUPPLIER",
+            "status": "ACTIVE", "contact_name": "Michael Chen", "contact_email": "contact@staffpro.com",
+            "industry": "Staffing", "tier": "GOLD", "parent_id": 1, "now": now
+        })
+        
+        # Hash passwords
+        msp_admin_pw = hash_password("Demo123456")
+        msp_recruiter_pw = hash_password("Demo123456")
+        client_mgr_pw = hash_password("Demo123456")
+        supplier_rec_pw = hash_password("Demo123456")
+        demo_user_pw = hash_password("Demo123456")
+        
+        # Create Users
+        # 1. MSP Admin
+        await session.execute(text(
+            "INSERT INTO users (id, email, first_name, last_name, hashed_password, role, "
+            "organization_id, is_active, created_at, updated_at) "
+            "VALUES (:id, :email, :fn, :ln, :pw, :role, :org_id, 1, :now, :now)"
+        ), {
+            "id": 1, "email": "msp_admin@hotgigs.com", "fn": "Admin", "ln": "User",
+            "pw": msp_admin_pw, "role": "MSP_ADMIN", "org_id": 1, "now": now
+        })
+        
+        # 2. MSP Recruiter
+        await session.execute(text(
+            "INSERT INTO users (id, email, first_name, last_name, hashed_password, role, "
+            "organization_id, is_active, created_at, updated_at) "
+            "VALUES (:id, :email, :fn, :ln, :pw, :role, :org_id, 1, :now, :now)"
+        ), {
+            "id": 2, "email": "msp_recruiter@hotgigs.com", "fn": "Jane", "ln": "Recruiter",
+            "pw": msp_recruiter_pw, "role": "MSP_RECRUITER", "org_id": 1, "now": now
+        })
+        
+        # 3. Client Manager
+        await session.execute(text(
+            "INSERT INTO users (id, email, first_name, last_name, hashed_password, role, "
+            "organization_id, is_active, created_at, updated_at) "
+            "VALUES (:id, :email, :fn, :ln, :pw, :role, :org_id, 1, :now, :now)"
+        ), {
+            "id": 3, "email": "client_mgr@techcorp.com", "fn": "Sarah", "ln": "Manager",
+            "pw": client_mgr_pw, "role": "CLIENT_MANAGER", "org_id": 2, "now": now
+        })
+        
+        # 4. Supplier Recruiter
+        await session.execute(text(
+            "INSERT INTO users (id, email, first_name, last_name, hashed_password, role, "
+            "organization_id, is_active, created_at, updated_at) "
+            "VALUES (:id, :email, :fn, :ln, :pw, :role, :org_id, 1, :now, :now)"
+        ), {
+            "id": 4, "email": "supplier_rec@staffpro.com", "fn": "Michael", "ln": "Chen",
+            "pw": supplier_rec_pw, "role": "SUPPLIER_RECRUITER", "org_id": 3, "now": now
+        })
+        
+        # 5. Demo user (associated with MSP org)
+        await session.execute(text(
+            "INSERT INTO users (id, email, first_name, last_name, hashed_password, role, "
+            "organization_id, is_active, created_at, updated_at) "
+            "VALUES (:id, :email, :fn, :ln, :pw, :role, :org_id, 1, :now, :now)"
+        ), {
+            "id": 5, "email": "demo@hrplatform.com", "fn": "Demo", "ln": "User",
+            "pw": demo_user_pw, "role": "RECRUITER", "org_id": 1, "now": now
+        })
+        
+        # Create Organization Memberships
+        # MSP Admin membership (primary)
+        await session.execute(text(
+            "INSERT INTO organization_memberships (organization_id, user_id, role, is_primary, is_active, joined_at, created_at, updated_at) "
+            "VALUES (:org_id, :user_id, :role, 1, 1, :now, :now, :now)"
+        ), {
+            "org_id": 1, "user_id": 1, "role": "MSP_ADMIN", "now": now
+        })
+        
+        # MSP Recruiter membership (primary)
+        await session.execute(text(
+            "INSERT INTO organization_memberships (organization_id, user_id, role, is_primary, is_active, joined_at, created_at, updated_at) "
+            "VALUES (:org_id, :user_id, :role, 1, 1, :now, :now, :now)"
+        ), {
+            "org_id": 1, "user_id": 2, "role": "MSP_RECRUITER", "now": now
+        })
+        
+        # Client Manager membership (primary)
+        await session.execute(text(
+            "INSERT INTO organization_memberships (organization_id, user_id, role, is_primary, is_active, joined_at, created_at, updated_at) "
+            "VALUES (:org_id, :user_id, :role, 1, 1, :now, :now, :now)"
+        ), {
+            "org_id": 2, "user_id": 3, "role": "CLIENT_MANAGER", "now": now
+        })
+        
+        # Supplier Recruiter membership (primary)
+        await session.execute(text(
+            "INSERT INTO organization_memberships (organization_id, user_id, role, is_primary, is_active, joined_at, created_at, updated_at) "
+            "VALUES (:org_id, :user_id, :role, 1, 1, :now, :now, :now)"
+        ), {
+            "org_id": 3, "user_id": 4, "role": "SUPPLIER_RECRUITER", "now": now
+        })
+        
+        # Demo user membership with MSP (primary)
+        await session.execute(text(
+            "INSERT INTO organization_memberships (organization_id, user_id, role, is_primary, is_active, joined_at, created_at, updated_at) "
+            "VALUES (:org_id, :user_id, :role, 1, 1, :now, :now, :now)"
+        ), {
+            "org_id": 1, "user_id": 5, "role": "RECRUITER", "now": now
+        })
+        
         await session.commit()
-    print("Seeded test users and customers")
+    
+    print("Seeded multi-tenant demo organizations and users")
 
 # ── Ensure DB is initialized on EVERY request ────────────────────────
 # Override get_db dependency so it always inits DB first
@@ -312,6 +435,8 @@ except Exception as e:
         ("security", "Security"), ("admin", "Admin"),
         ("messaging", "Messaging"), ("payments", "Payments"),
         ("timesheets", "Timesheets"), ("invoices", "Invoices"),
+        ("organizations", "Organizations"), ("msp", "MSP"),
+        ("client_portal", "Client Portal"), ("supplier_portal", "Supplier Portal"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")
