@@ -19,6 +19,14 @@ import { Reports } from '@/pages/Reports';
 import { Settings } from '@/pages/Settings';
 import { Admin } from '@/pages/Admin';
 
+// Analytics Pages
+import { CandidateScoreCard } from '@/pages/CandidateScoreCard';
+import { JobFitAnalysis } from '@/pages/JobFitAnalysis';
+import { SkillGapAnalyzer } from '@/pages/SkillGapAnalyzer';
+import { RecruiterDashboard } from '@/pages/RecruiterDashboard';
+import { ApplicantTracker } from '@/pages/ApplicantTracker';
+import { AIPredictionsPanel } from '@/pages/AIPredictionsPanel';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -120,6 +128,14 @@ function App() {
           <Route path="/settings" element={<AuthenticatedLayout title="Settings"><Settings /></AuthenticatedLayout>} />
           <Route path="/admin" element={<AuthenticatedLayout title="Admin"><Admin /></AuthenticatedLayout>} />
 
+          {/* Analytics Routes */}
+          <Route path="/candidate-scorecard" element={<AuthenticatedLayout title="Candidate Scorecard"><CandidateScoreCard /></AuthenticatedLayout>} />
+          <Route path="/job-fit-analysis" element={<AuthenticatedLayout title="Job Fit Analysis"><JobFitAnalysis /></AuthenticatedLayout>} />
+          <Route path="/skill-gap-analyzer" element={<AuthenticatedLayout title="Skill Gap Analyzer"><SkillGapAnalyzer /></AuthenticatedLayout>} />
+          <Route path="/recruiter-dashboard" element={<AuthenticatedLayout title="Recruiter Dashboard"><RecruiterDashboard /></AuthenticatedLayout>} />
+          <Route path="/applicant-tracker" element={<AuthenticatedLayout title="Applicant Tracker"><ApplicantTracker /></AuthenticatedLayout>} />
+          <Route path="/ai-predictions" element={<AuthenticatedLayout title="AI Predictions"><AIPredictionsPanel /></AuthenticatedLayout>} />
+
           {/* MSP Portal Routes */}
           <Route path="/msp/dashboard" element={
             <OrgTypeGuard allowedTypes={['msp']}>
@@ -174,6 +190,23 @@ function App() {
           <Route path="/msp/distributions" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Distributions">{PlaceholderPage('Distributions')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP Analytics Routes */}
+          <Route path="/msp/ai-predictions" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="AI Predictions"><AIPredictionsPanel /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/recruiter-dashboard" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Recruiter Dashboard"><RecruiterDashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/applicant-tracker" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Applicant Tracker"><ApplicantTracker /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

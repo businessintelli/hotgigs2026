@@ -82,6 +82,17 @@ const mspNavigation: NavGroup[] = [
     ],
   },
   {
+    label: 'AI ANALYTICS',
+    items: [
+      { icon: ChartBarIcon, label: 'Candidate Scorecard', href: '/msp/candidate-scorecard' },
+      { icon: ChartBarIcon, label: 'Job Fit Analysis', href: '/msp/job-fit-analysis' },
+      { icon: ChartBarIcon, label: 'Skill Gap Analyzer', href: '/msp/skill-gap-analyzer' },
+      { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/msp/recruiter-dashboard' },
+      { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/msp/applicant-tracker' },
+      { icon: ChartBarIcon, label: 'AI Predictions', href: '/msp/ai-predictions' },
+    ],
+  },
+  {
     label: 'ANALYTICS & ADMIN',
     items: [
       { icon: ChartBarIcon, label: 'Analytics', href: '/msp/analytics' },
@@ -183,6 +194,17 @@ const defaultNavigation: NavGroup[] = [
     label: 'AI TOOLS',
     items: [
       { icon: SparklesIcon, label: 'Copilot', href: '/copilot' },
+    ],
+  },
+  {
+    label: 'AI ANALYTICS',
+    items: [
+      { icon: ChartBarIcon, label: 'Candidate Scorecard', href: '/candidate-scorecard' },
+      { icon: ChartBarIcon, label: 'Job Fit Analysis', href: '/job-fit-analysis' },
+      { icon: ChartBarIcon, label: 'Skill Gap Analyzer', href: '/skill-gap-analyzer' },
+      { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/recruiter-dashboard' },
+      { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/applicant-tracker' },
+      { icon: ChartBarIcon, label: 'AI Predictions', href: '/ai-predictions' },
     ],
   },
   {

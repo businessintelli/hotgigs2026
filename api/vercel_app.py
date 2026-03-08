@@ -543,6 +543,7 @@ except Exception as e:
     import importlib
     for name, tag in [
         ("auth", "Auth"), ("dashboard", "Dashboard"), ("reports", "Reports & Analytics"),
+        ("analytics", "Analytics"),
         ("interviews", "Interviews"), ("matching", "Matching"),
         ("offers", "Offers"), ("resumes", "Resumes"),
         ("submissions", "Submissions"), ("suppliers", "Suppliers"),

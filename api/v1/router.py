@@ -8,6 +8,7 @@ from api.v1 import (
     auth,
     dashboard,
     reports,
+    analytics,
     interviews,
     matching,
     offers,
@@ -53,6 +54,7 @@ router = APIRouter(prefix="/api/v1")
 router.include_router(auth.router, tags=["Authentication"])
 router.include_router(dashboard.router, tags=["Dashboard & Analytics"])
 router.include_router(reports.router, tags=["Reports & Analytics"])
+router.include_router(analytics.router, tags=["Advanced Analytics"])
 
 # ── Requirement & Candidate Pipeline ──
 router.include_router(resumes.router, tags=["Resumes & Parsing"])
@@ -119,7 +121,7 @@ async def v1_status():
         "version": "2.0.0",
         "platform": "HR Automation Platform",
         "modules": {
-            "core": ["auth", "dashboard"],
+            "core": ["auth", "dashboard", "reports", "analytics"],
             "pipeline": ["resumes", "matching", "interviews", "submissions", "offers", "negotiations"],
             "ai_agents": ["copilot", "conversations", "rediscovery", "job_posts"],
             "sourcing": ["harvest", "marketing"],
@@ -133,8 +135,8 @@ async def v1_status():
             "vms_enhancement": ["rate_cards", "compliance_mgmt", "sla", "vms_timesheets", "auto_invoicing"],
         },
         "total_agents": 37,
-        "total_api_modules": 36,
+        "total_api_modules": 37,
     }
 
 
-logger.info("V1 router initialized with all 32 sub-routers (Batch D VMS enhancement added)")
+logger.info("V1 router initialized with all 37 sub-routers (Advanced Analytics added)")
