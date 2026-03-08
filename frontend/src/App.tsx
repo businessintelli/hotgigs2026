@@ -27,6 +27,15 @@ import { RecruiterDashboard } from '@/pages/RecruiterDashboard';
 import { ApplicantTracker } from '@/pages/ApplicantTracker';
 import { AIPredictionsPanel } from '@/pages/AIPredictionsPanel';
 
+// CRM & ATS Pages
+import { CandidateCRM } from '@/pages/CandidateCRM';
+import { JobOrderManager } from '@/pages/JobOrderManager';
+import { OfferManagement } from '@/pages/OfferManagement';
+import { OnboardingTracker } from '@/pages/OnboardingTracker';
+import { InterviewInsights } from '@/pages/InterviewInsights';
+import { AdvancedSearch } from '@/pages/AdvancedSearch';
+import { AutomationCenter } from '@/pages/AutomationCenter';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -136,6 +145,15 @@ function App() {
           <Route path="/applicant-tracker" element={<AuthenticatedLayout title="Applicant Tracker"><ApplicantTracker /></AuthenticatedLayout>} />
           <Route path="/ai-predictions" element={<AuthenticatedLayout title="AI Predictions"><AIPredictionsPanel /></AuthenticatedLayout>} />
 
+          {/* CRM & ATS Routes */}
+          <Route path="/candidate-crm" element={<AuthenticatedLayout title="Candidate CRM"><CandidateCRM /></AuthenticatedLayout>} />
+          <Route path="/job-orders" element={<AuthenticatedLayout title="Job Order Manager"><JobOrderManager /></AuthenticatedLayout>} />
+          <Route path="/offers" element={<AuthenticatedLayout title="Offer Management"><OfferManagement /></AuthenticatedLayout>} />
+          <Route path="/onboarding" element={<AuthenticatedLayout title="Onboarding Tracker"><OnboardingTracker /></AuthenticatedLayout>} />
+          <Route path="/interview-insights" element={<AuthenticatedLayout title="Interview Insights"><InterviewInsights /></AuthenticatedLayout>} />
+          <Route path="/advanced-search" element={<AuthenticatedLayout title="Advanced Search"><AdvancedSearch /></AuthenticatedLayout>} />
+          <Route path="/automation" element={<AuthenticatedLayout title="Automation Center"><AutomationCenter /></AuthenticatedLayout>} />
+
           {/* MSP Portal Routes */}
           <Route path="/msp/dashboard" element={
             <OrgTypeGuard allowedTypes={['msp']}>
@@ -207,6 +225,43 @@ function App() {
           <Route path="/msp/applicant-tracker" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Applicant Tracker"><ApplicantTracker /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP CRM & ATS Routes */}
+          <Route path="/msp/candidate-crm" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Candidate CRM"><CandidateCRM /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/job-orders" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Job Order Manager"><JobOrderManager /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/offers" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Offer Management"><OfferManagement /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/onboarding" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Onboarding Tracker"><OnboardingTracker /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/interview-insights" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Interview Insights"><InterviewInsights /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/advanced-search" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Advanced Search"><AdvancedSearch /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/automation" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Automation Center"><AutomationCenter /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

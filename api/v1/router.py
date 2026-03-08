@@ -43,6 +43,10 @@ from api.v1 import (
     sla,
     vms_timesheets,
     auto_invoicing,
+    crm,
+    ats,
+    search,
+    automation,
 )
 
 logger = logging.getLogger(__name__)
@@ -112,6 +116,14 @@ router.include_router(sla.router, tags=["SLA Management"])
 router.include_router(vms_timesheets.router, tags=["VMS Timesheets"])
 router.include_router(auto_invoicing.router, tags=["Auto Invoicing"])
 
+# ── Phase 2 & 3: Candidate CRM & Enhanced ATS ──
+router.include_router(crm.router, tags=["Candidate CRM"])
+router.include_router(ats.router, tags=["ATS Enhancement"])
+
+# ── Phase 4: Advanced Search, Automation & Notifications ──
+router.include_router(search.router, tags=["Advanced Search"])
+router.include_router(automation.router, tags=["Automation & Notifications"])
+
 
 @router.get("", tags=["Status"])
 async def v1_status():
@@ -133,10 +145,13 @@ async def v1_status():
             "admin": ["alerts", "security", "admin", "cicd"],
             "vms_msp": ["organizations", "msp", "client_portal", "supplier_portal"],
             "vms_enhancement": ["rate_cards", "compliance_mgmt", "sla", "vms_timesheets", "auto_invoicing"],
+            "candidate_crm": ["crm"],
+            "ats_enhancement": ["ats"],
+            "phase_4": ["search", "automation"],
         },
-        "total_agents": 37,
-        "total_api_modules": 37,
+        "total_agents": 41,
+        "total_api_modules": 41,
     }
 
 
-logger.info("V1 router initialized with all 37 sub-routers (Advanced Analytics added)")
+logger.info("V1 router initialized with all 41 sub-routers (Phase 4 Search & Automation added)")

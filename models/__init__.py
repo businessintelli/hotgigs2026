@@ -27,6 +27,24 @@ from .enums import (
     SLASeverity,
     ExpenseStatus,
     ExpenseCategory,
+    # Phase 2 Enums
+    ActivityType,
+    NoteType,
+    CommunicationDirection,
+    CommunicationChannel,
+    # Phase 3 Enums
+    JobOrderPriority,
+    JobOrderDistribution,
+    JobOrderStatus,
+    OnboardingTaskType,
+    OnboardingTaskStatus,
+    InterviewRecommendation,
+    # Phase 4 Enums
+    SearchType,
+    TriggerEvent,
+    ActionType,
+    NotificationType,
+    NotificationCategory,
 )
 from .organization import Organization
 from .customer import Customer
@@ -65,11 +83,29 @@ from .msp_workflow import (
     ClientFeedback,
     PlacementRecord,
 )
+from .crm import (
+    CandidateActivity,
+    CandidateNote,
+    CandidateTag,
+    CandidateTagAssociation,
+    CommunicationLog,
+)
+from .ats import (
+    JobOrder,
+    OfferWorkflow,
+    OnboardingTask,
+    InterviewFeedback,
+)
+from .automation import (
+    SavedSearch,
+    AutomationRule,
+    Notification,
+)
 
 __all__ = [
     "BaseModel",
     "TenantBaseModel",
-        # Enums
+    # Enums
     "OrganizationType",
     "OrgOnboardingStatus",
     "RequirementStatus",
@@ -97,6 +133,24 @@ __all__ = [
     "SLASeverity",
     "ExpenseStatus",
     "ExpenseCategory",
+    # Phase 2 Enums
+    "ActivityType",
+    "NoteType",
+    "CommunicationDirection",
+    "CommunicationChannel",
+    # Phase 3 Enums
+    "JobOrderPriority",
+    "JobOrderDistribution",
+    "JobOrderStatus",
+    "OnboardingTaskType",
+    "OnboardingTaskStatus",
+    "InterviewRecommendation",
+    # Phase 4 Enums
+    "SearchType",
+    "TriggerEvent",
+    "ActionType",
+    "NotificationType",
+    "NotificationCategory",
     # Core entities
     "Organization",
     "Customer",
@@ -151,8 +205,23 @@ __all__ = [
     "SLAConfiguration",
     "SLABreachRecord",
     "ExpenseEntry",
+    # Phase 2: CRM Models
+    "CandidateActivity",
+    "CandidateNote",
+    "CandidateTag",
+    "CandidateTagAssociation",
+    "CommunicationLog",
+    # Phase 3: ATS Models
+    "JobOrder",
+    "OfferWorkflow",
+    "OnboardingTask",
+    # Phase 4: Automation & Search
+    "SavedSearch",
+    "AutomationRule",
+    "Notification",
 ]
 from models.rate_card import RateCard, RateCardEntry
 from models.compliance import ComplianceRequirement, ComplianceRecord, ComplianceScore
 from models.sla import SLAConfiguration, SLABreachRecord
 from models.expense import ExpenseEntry
+from models.automation import SavedSearch, AutomationRule, Notification

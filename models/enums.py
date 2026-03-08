@@ -423,3 +423,152 @@ class ExpenseCategory(str, Enum):
     TRAINING = "training"
     MEALS = "meals"
     OTHER = "other"
+
+
+# --- Phase 2: Candidate CRM Enums ---
+
+class ActivityType(str, Enum):
+    """Type of candidate activity."""
+    NOTE = "note"
+    EMAIL = "email"
+    CALL = "call"
+    MEETING = "meeting"
+    STATUS_CHANGE = "status_change"
+    DOCUMENT_UPLOAD = "document_upload"
+    INTERVIEW_SCHEDULED = "interview_scheduled"
+    FEEDBACK = "feedback"
+    SYSTEM = "system"
+
+
+class NoteType(str, Enum):
+    """Type of candidate note."""
+    GENERAL = "general"
+    SCREENING = "screening"
+    INTERVIEW = "interview"
+    TECHNICAL = "technical"
+    REFERENCE = "reference"
+    INTERNAL = "internal"
+
+
+class CommunicationDirection(str, Enum):
+    """Direction of communication."""
+    INBOUND = "inbound"
+    OUTBOUND = "outbound"
+
+
+class CommunicationChannel(str, Enum):
+    """Channel of communication."""
+    EMAIL = "email"
+    PHONE = "phone"
+    SMS = "sms"
+    LINKEDIN = "linkedin"
+    WHATSAPP = "whatsapp"
+    IN_APP = "in_app"
+
+
+# --- Phase 3: Enhanced ATS Enums ---
+
+class JobOrderPriority(str, Enum):
+    """Priority of job order."""
+    URGENT = "urgent"
+    HIGH = "high"
+    NORMAL = "normal"
+    LOW = "low"
+
+
+class JobOrderDistribution(str, Enum):
+    """Distribution type for job order."""
+    EXCLUSIVE = "exclusive"
+    PREFERRED = "preferred"
+    OPEN = "open"
+
+
+class JobOrderStatus(str, Enum):
+    """Status of job order."""
+    DRAFT = "draft"
+    OPEN = "open"
+    ON_HOLD = "on_hold"
+    FILLED = "filled"
+    CANCELLED = "cancelled"
+
+
+class OnboardingTaskType(str, Enum):
+    """Type of onboarding task."""
+    DOCUMENT = "document"
+    BACKGROUND_CHECK = "background_check"
+    DRUG_TEST = "drug_test"
+    ORIENTATION = "orientation"
+    IT_SETUP = "it_setup"
+    TRAINING = "training"
+    BADGE = "badge"
+    OTHER = "other"
+
+
+class OnboardingTaskStatus(str, Enum):
+    """Status of onboarding task."""
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    BLOCKED = "blocked"
+    WAIVED = "waived"
+
+
+class InterviewRecommendation(str, Enum):
+    """Recommendation from interview."""
+    STRONG_HIRE = "strong_hire"
+    HIRE = "hire"
+    MAYBE = "maybe"
+    NO_HIRE = "no_hire"
+    STRONG_NO_HIRE = "strong_no_hire"
+
+
+# --- Phase 4: Advanced Search, Automation & Notifications ---
+
+class SearchType(str, Enum):
+    """Type of search."""
+    CANDIDATE = "candidate"
+    REQUIREMENT = "requirement"
+    SUBMISSION = "submission"
+    SUPPLIER = "supplier"
+
+
+class TriggerEvent(str, Enum):
+    """Events that trigger automation rules."""
+    CANDIDATE_STATUS_CHANGE = "candidate_status_change"
+    SUBMISSION_CREATED = "submission_created"
+    INTERVIEW_SCHEDULED = "interview_scheduled"
+    OFFER_EXTENDED = "offer_extended"
+    PLACEMENT_CREATED = "placement_created"
+    SLA_BREACH = "sla_breach"
+    COMPLIANCE_EXPIRING = "compliance_expiring"
+    TIMESHEET_SUBMITTED = "timesheet_submitted"
+
+
+class ActionType(str, Enum):
+    """Type of automation action."""
+    SEND_NOTIFICATION = "send_notification"
+    SEND_EMAIL = "send_email"
+    UPDATE_STATUS = "update_status"
+    ASSIGN_TASK = "assign_task"
+    CREATE_ACTIVITY = "create_activity"
+    SLACK_MESSAGE = "slack_message"
+
+
+class NotificationType(str, Enum):
+    """Type of notification."""
+    INFO = "info"
+    WARNING = "warning"
+    ALERT = "alert"
+    SUCCESS = "success"
+    ACTION_REQUIRED = "action_required"
+
+
+class NotificationCategory(str, Enum):
+    """Category of notification."""
+    SUBMISSION = "submission"
+    INTERVIEW = "interview"
+    OFFER = "offer"
+    COMPLIANCE = "compliance"
+    SLA = "sla"
+    TIMESHEET = "timesheet"
+    SYSTEM = "system"

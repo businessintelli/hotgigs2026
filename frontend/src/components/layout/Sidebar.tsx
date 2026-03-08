@@ -27,6 +27,7 @@ import {
   PaperAirplaneIcon,
   EyeIcon,
   ExclamationTriangleIcon,
+  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
 import { useUIStore } from '@/store/uiStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -82,6 +83,16 @@ const mspNavigation: NavGroup[] = [
     ],
   },
   {
+    label: 'CRM & ATS',
+    items: [
+      { icon: UserGroupIcon, label: 'Candidate CRM', href: '/msp/candidate-crm' },
+      { icon: BriefcaseIcon, label: 'Job Orders', href: '/msp/job-orders' },
+      { icon: DocumentTextIcon, label: 'Offers', href: '/msp/offers' },
+      { icon: CheckCircleIcon, label: 'Onboarding', href: '/msp/onboarding' },
+      { icon: StarIcon, label: 'Interview Insights', href: '/msp/interview-insights' },
+    ],
+  },
+  {
     label: 'AI ANALYTICS',
     items: [
       { icon: ChartBarIcon, label: 'Candidate Scorecard', href: '/msp/candidate-scorecard' },
@@ -90,6 +101,13 @@ const mspNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/msp/recruiter-dashboard' },
       { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/msp/applicant-tracker' },
       { icon: ChartBarIcon, label: 'AI Predictions', href: '/msp/ai-predictions' },
+    ],
+  },
+  {
+    label: 'TOOLS',
+    items: [
+      { icon: MagnifyingGlassIcon, label: 'Advanced Search', href: '/msp/advanced-search' },
+      { icon: SparklesIcon, label: 'Automation Center', href: '/msp/automation' },
     ],
   },
   {
@@ -197,6 +215,16 @@ const defaultNavigation: NavGroup[] = [
     ],
   },
   {
+    label: 'CRM & ATS',
+    items: [
+      { icon: UserGroupIcon, label: 'Candidate CRM', href: '/candidate-crm' },
+      { icon: BriefcaseIcon, label: 'Job Orders', href: '/job-orders' },
+      { icon: DocumentTextIcon, label: 'Offers', href: '/offers' },
+      { icon: CheckCircleIcon, label: 'Onboarding', href: '/onboarding' },
+      { icon: StarIcon, label: 'Interview Insights', href: '/interview-insights' },
+    ],
+  },
+  {
     label: 'AI ANALYTICS',
     items: [
       { icon: ChartBarIcon, label: 'Candidate Scorecard', href: '/candidate-scorecard' },
@@ -205,6 +233,13 @@ const defaultNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/recruiter-dashboard' },
       { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/applicant-tracker' },
       { icon: ChartBarIcon, label: 'AI Predictions', href: '/ai-predictions' },
+    ],
+  },
+  {
+    label: 'TOOLS',
+    items: [
+      { icon: MagnifyingGlassIcon, label: 'Advanced Search', href: '/advanced-search' },
+      { icon: SparklesIcon, label: 'Automation Center', href: '/automation' },
     ],
   },
   {
