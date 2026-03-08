@@ -87,6 +87,7 @@ const mspNavigation: NavGroup[] = [
   {
     label: 'CRM & ATS',
     items: [
+      { icon: ArrowPathIcon, label: 'ATS Workflow', href: '/msp/ats-workflow' },
       { icon: UserGroupIcon, label: 'Candidate CRM', href: '/msp/candidate-crm' },
       { icon: BriefcaseIcon, label: 'Job Orders', href: '/msp/job-orders' },
       { icon: DocumentTextIcon, label: 'Offers', href: '/msp/offers' },
@@ -227,6 +228,7 @@ const defaultNavigation: NavGroup[] = [
   {
     label: 'CRM & ATS',
     items: [
+      { icon: ArrowPathIcon, label: 'ATS Workflow', href: '/ats-workflow' },
       { icon: UserGroupIcon, label: 'Candidate CRM', href: '/candidate-crm' },
       { icon: BriefcaseIcon, label: 'Job Orders', href: '/job-orders' },
       { icon: DocumentTextIcon, label: 'Offers', href: '/offers' },
