@@ -7,6 +7,7 @@ from fastapi import APIRouter
 from api.v1 import (
     auth,
     dashboard,
+    reports,
     interviews,
     matching,
     offers,
@@ -51,6 +52,7 @@ router = APIRouter(prefix="/api/v1")
 # ── Core Modules ──
 router.include_router(auth.router, tags=["Authentication"])
 router.include_router(dashboard.router, tags=["Dashboard & Analytics"])
+router.include_router(reports.router, tags=["Reports & Analytics"])
 
 # ── Requirement & Candidate Pipeline ──
 router.include_router(resumes.router, tags=["Resumes & Parsing"])

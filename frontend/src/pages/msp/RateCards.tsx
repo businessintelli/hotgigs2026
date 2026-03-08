@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PlusIcon,
   PencilIcon,
   TrashIcon,
   FunnelIcon,
 } from '@heroicons/react/24/outline';
+import client from '@/api/client';
 
 interface RateCard {
   id: string;
@@ -92,15 +93,107 @@ const getStatusBadge = (status: string) => {
 };
 
 export const RateCards: React.FC = () => {
+  const [rateCards, setRateCards] = useState<RateCard[]>(mockRateCards);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    jobCategory: '',
+    location: '',
+    skillLevel: '',
+    status: 'DRAFT',
+    billRateMin: '',
+    billRateMax: '',
+    payRateMin: '',
+    payRateMax: '',
+  });
+
+  useEffect(() => {
+    const fetchRateCards = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await client.get('/rate-cards');
+        if (response.data && response.data.length > 0) {
+          setRateCards(response.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch rate cards, using mock data:', err);
+        setError('Failed to load rate cards, using mock data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRateCards();
+  }, []);
+
+  const handleCreateRateCard = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const newCard = {
+        jobCategory: formData.jobCategory,
+        location: formData.location,
+        skillLevel: formData.skillLevel,
+        status: formData.status,
+        billRateMin: parseFloat(formData.billRateMin),
+        billRateMax: parseFloat(formData.billRateMax),
+        payRateMin: parseFloat(formData.payRateMin),
+        payRateMax: parseFloat(formData.payRateMax),
+      };
+
+      const response = await client.post('/rate-cards', newCard);
+      setRateCards([...rateCards, response.data]);
+      console.log('Rate card created successfully:', response.data);
+      setFormData({
+        jobCategory: '',
+        location: '',
+        skillLevel: '',
+        status: 'DRAFT',
+        billRateMin: '',
+        billRateMax: '',
+        payRateMin: '',
+        payRateMax: '',
+      });
+      setIsCreateFormOpen(false);
+    } catch (err) {
+      console.error('Failed to create rate card:', err);
+      alert('Failed to create rate card');
+    }
+  };
+
+  const handleDeleteRateCard = async (id: string) => {
+    try {
+      await client.delete(`/rate-cards/${id}`);
+      setRateCards(rateCards.filter(card => card.id !== id));
+      console.log('Rate card deleted successfully');
+    } catch (err) {
+      console.error('Failed to delete rate card:', err);
+      alert('Failed to delete rate card');
+    }
+  };
 
   const filteredCards = filterStatus === 'ALL'
-    ? mockRateCards
-    : mockRateCards.filter(card => card.status === filterStatus);
+    ? rateCards
+    : rateCards.filter(card => card.status === filterStatus);
 
   return (
     <div className="space-y-6">
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{error}</p>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Rate Cards</h1>
@@ -138,60 +231,92 @@ export const RateCards: React.FC = () => {
       {isCreateFormOpen && (
         <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-neutral-200 dark:border-neutral-700 space-y-4">
           <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">Create New Rate Card</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Job Category"
-              className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <input
-              type="text"
-              placeholder="Location"
-              className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <select className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
-              <option>Select Skill Level</option>
-              <option>Junior</option>
-              <option>Mid-Level</option>
-              <option>Senior</option>
-            </select>
-            <select className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
-              <option>Select Status</option>
-              <option>DRAFT</option>
-              <option>ACTIVE</option>
-            </select>
-            <input
-              type="number"
-              placeholder="Bill Rate Min ($)"
-              className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <input
-              type="number"
-              placeholder="Bill Rate Max ($)"
-              className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <input
-              type="number"
-              placeholder="Pay Rate Min ($)"
-              className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <input
-              type="number"
-              placeholder="Pay Rate Max ($)"
-              className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-          </div>
-          <div className="flex gap-2 pt-2">
-            <button className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-sm font-medium">
-              Save Rate Card
-            </button>
-            <button
-              onClick={() => setIsCreateFormOpen(false)}
-              className="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors text-sm font-medium"
-            >
-              Cancel
-            </button>
-          </div>
+          <form onSubmit={handleCreateRateCard}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <input
+                type="text"
+                placeholder="Job Category"
+                value={formData.jobCategory}
+                onChange={(e) => setFormData({ ...formData, jobCategory: e.target.value })}
+                required
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              <input
+                type="text"
+                placeholder="Location"
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                required
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              <select
+                value={formData.skillLevel}
+                onChange={(e) => setFormData({ ...formData, skillLevel: e.target.value })}
+                required
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="">Select Skill Level</option>
+                <option value="Junior">Junior</option>
+                <option value="Mid-Level">Mid-Level</option>
+                <option value="Senior">Senior</option>
+              </select>
+              <select
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="DRAFT">DRAFT</option>
+                <option value="ACTIVE">ACTIVE</option>
+              </select>
+              <input
+                type="number"
+                placeholder="Bill Rate Min ($)"
+                value={formData.billRateMin}
+                onChange={(e) => setFormData({ ...formData, billRateMin: e.target.value })}
+                required
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              <input
+                type="number"
+                placeholder="Bill Rate Max ($)"
+                value={formData.billRateMax}
+                onChange={(e) => setFormData({ ...formData, billRateMax: e.target.value })}
+                required
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              <input
+                type="number"
+                placeholder="Pay Rate Min ($)"
+                value={formData.payRateMin}
+                onChange={(e) => setFormData({ ...formData, payRateMin: e.target.value })}
+                required
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              <input
+                type="number"
+                placeholder="Pay Rate Max ($)"
+                value={formData.payRateMax}
+                onChange={(e) => setFormData({ ...formData, payRateMax: e.target.value })}
+                required
+                className="px-3 py-2 bg-neutral-50 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-sm font-medium"
+              >
+                Save Rate Card
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsCreateFormOpen(false)}
+                className="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors text-sm font-medium"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
@@ -252,7 +377,11 @@ export const RateCards: React.FC = () => {
                       <button className="p-1 text-neutral-400 hover:text-primary-500 transition-colors" title="Edit">
                         <PencilIcon className="w-4 h-4" />
                       </button>
-                      <button className="p-1 text-neutral-400 hover:text-red-500 transition-colors" title="Delete">
+                      <button
+                        onClick={() => handleDeleteRateCard(card.id)}
+                        className="p-1 text-neutral-400 hover:text-red-500 transition-colors"
+                        title="Delete"
+                      >
                         <TrashIcon className="w-4 h-4" />
                       </button>
                     </div>

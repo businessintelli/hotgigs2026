@@ -41,6 +41,10 @@ import { SupplierTimesheets } from '@/pages/supplier/Timesheets';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { OrgSwitcher } from '@/components/layout/OrgSwitcher';
 
+// Guards
+import { OrgTypeGuard } from '@/components/guards/OrgTypeGuard';
+import { RoleGuard } from '@/components/guards/RoleGuard';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -117,36 +121,140 @@ function App() {
           <Route path="/admin" element={<AuthenticatedLayout title="Admin"><Admin /></AuthenticatedLayout>} />
 
           {/* MSP Portal Routes */}
-          <Route path="/msp/dashboard" element={<AuthenticatedLayout title="MSP Dashboard"><MSPDashboard /></AuthenticatedLayout>} />
-          <Route path="/msp/clients" element={<AuthenticatedLayout title="Clients"><ClientsList /></AuthenticatedLayout>} />
-          <Route path="/msp/suppliers" element={<AuthenticatedLayout title="Suppliers"><SuppliersList /></AuthenticatedLayout>} />
-          <Route path="/msp/submissions" element={<AuthenticatedLayout title="Submissions Pipeline"><SubmissionsPipeline /></AuthenticatedLayout>} />
-          <Route path="/msp/rate-cards" element={<AuthenticatedLayout title="Rate Cards"><RateCards /></AuthenticatedLayout>} />
-          <Route path="/msp/compliance" element={<AuthenticatedLayout title="Compliance"><ComplianceDashboard /></AuthenticatedLayout>} />
-          <Route path="/msp/sla" element={<AuthenticatedLayout title="SLA Monitoring"><SLADashboard /></AuthenticatedLayout>} />
-          <Route path="/msp/vms-timesheets" element={<AuthenticatedLayout title="VMS Timesheets"><VMSTimesheets /></AuthenticatedLayout>} />
-          <Route path="/msp/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
-          <Route path="/msp/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
-          <Route path="/msp/distributions" element={<AuthenticatedLayout title="Distributions">{PlaceholderPage('Distributions')()}</AuthenticatedLayout>} />
+          <Route path="/msp/dashboard" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="MSP Dashboard"><MSPDashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/clients" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Clients"><ClientsList /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/suppliers" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Suppliers"><SuppliersList /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/submissions" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Submissions Pipeline"><SubmissionsPipeline /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/rate-cards" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Rate Cards"><RateCards /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/compliance" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Compliance"><ComplianceDashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/sla" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="SLA Monitoring"><SLADashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/vms-timesheets" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="VMS Timesheets"><VMSTimesheets /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/placements" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/analytics" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/distributions" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Distributions">{PlaceholderPage('Distributions')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
 
           {/* Client Portal Routes */}
-          <Route path="/client/dashboard" element={<AuthenticatedLayout title="Client Dashboard"><ClientDashboard /></AuthenticatedLayout>} />
-          <Route path="/client/requirements" element={<AuthenticatedLayout title="Requirements">{PlaceholderPage('Requirements')()}</AuthenticatedLayout>} />
-          <Route path="/client/requirements/new" element={<AuthenticatedLayout title="New Requirement">{PlaceholderPage('New Requirement')()}</AuthenticatedLayout>} />
-          <Route path="/client/submissions" element={<AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>} />
-          <Route path="/client/timesheets" element={<AuthenticatedLayout title="Timesheets"><ClientTimesheets /></AuthenticatedLayout>} />
-          <Route path="/client/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
-          <Route path="/client/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
-          <Route path="/client/interviews" element={<AuthenticatedLayout title="Interviews">{PlaceholderPage('Interviews')()}</AuthenticatedLayout>} />
+          <Route path="/client/dashboard" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="Client Dashboard"><ClientDashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/client/requirements" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="Requirements">{PlaceholderPage('Requirements')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/client/requirements/new" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="New Requirement">{PlaceholderPage('New Requirement')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/client/submissions" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/client/timesheets" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="Timesheets"><ClientTimesheets /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/client/placements" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/client/analytics" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/client/interviews" element={
+            <OrgTypeGuard allowedTypes={['client']}>
+              <AuthenticatedLayout title="Interviews">{PlaceholderPage('Interviews')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
 
           {/* Supplier Portal Routes */}
-          <Route path="/supplier/dashboard" element={<AuthenticatedLayout title="Supplier Dashboard"><SupplierDashboard /></AuthenticatedLayout>} />
-          <Route path="/supplier/opportunities" element={<AuthenticatedLayout title="Opportunities">{PlaceholderPage('Opportunities')()}</AuthenticatedLayout>} />
-          <Route path="/supplier/submissions" element={<AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>} />
-          <Route path="/supplier/timesheets" element={<AuthenticatedLayout title="Timesheets"><SupplierTimesheets /></AuthenticatedLayout>} />
-          <Route path="/supplier/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
-          <Route path="/supplier/performance" element={<AuthenticatedLayout title="Performance">{PlaceholderPage('Performance')()}</AuthenticatedLayout>} />
-          <Route path="/supplier/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
+          <Route path="/supplier/dashboard" element={
+            <OrgTypeGuard allowedTypes={['supplier']}>
+              <AuthenticatedLayout title="Supplier Dashboard"><SupplierDashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/supplier/opportunities" element={
+            <OrgTypeGuard allowedTypes={['supplier']}>
+              <AuthenticatedLayout title="Opportunities">{PlaceholderPage('Opportunities')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/supplier/submissions" element={
+            <OrgTypeGuard allowedTypes={['supplier']}>
+              <AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/supplier/timesheets" element={
+            <OrgTypeGuard allowedTypes={['supplier']}>
+              <AuthenticatedLayout title="Timesheets"><SupplierTimesheets /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/supplier/placements" element={
+            <OrgTypeGuard allowedTypes={['supplier']}>
+              <AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/supplier/performance" element={
+            <OrgTypeGuard allowedTypes={['supplier']}>
+              <AuthenticatedLayout title="Performance">{PlaceholderPage('Performance')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/supplier/analytics" element={
+            <OrgTypeGuard allowedTypes={['supplier']}>
+              <AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
 
           {/* Default Routes */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

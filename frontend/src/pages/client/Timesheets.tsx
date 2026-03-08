@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircleIcon,
   XMarkIcon,
   EyeIcon,
 } from '@heroicons/react/24/outline';
+import client from '@/api/client';
 
 interface ClientTimesheet {
   id: string;
@@ -73,27 +74,80 @@ const getStatusBadge = (status: string) => {
 };
 
 export const ClientTimesheets: React.FC = () => {
+  const [allTimesheets, setAllTimesheets] = useState<ClientTimesheet[]>(mockClientTimesheets);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showConfirmation, setShowConfirmation] = useState<{ id: string; action: 'approve' | 'reject' } | null>(null);
 
-  const pendingTimesheets = mockClientTimesheets.filter(ts => ts.status === 'PENDING_APPROVAL');
-  const approvedTimesheets = mockClientTimesheets.filter(ts => ts.status === 'APPROVED');
-  const rejectedTimesheets = mockClientTimesheets.filter(ts => ts.status === 'REJECTED');
+  useEffect(() => {
+    const fetchPendingTimesheets = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await client.get('/vms/timesheets?status=msp_reviewed');
+        if (response.data && response.data.length > 0) {
+          setAllTimesheets(response.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch timesheets, using mock data:', err);
+        setError('Failed to load timesheets, using mock data');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleApprove = (id: string) => {
-    setShowConfirmation(null);
-    // In a real app, this would call an API
-    console.log('Approved timesheet:', id);
+    fetchPendingTimesheets();
+  }, []);
+
+  const pendingTimesheets = allTimesheets.filter(ts => ts.status === 'PENDING_APPROVAL');
+  const approvedTimesheets = allTimesheets.filter(ts => ts.status === 'APPROVED');
+  const rejectedTimesheets = allTimesheets.filter(ts => ts.status === 'REJECTED');
+
+  const handleApprove = async (id: string) => {
+    try {
+      await client.put(`/vms/timesheets/${id}/client-approve`, { action: 'approve' });
+      setAllTimesheets(allTimesheets.map(ts =>
+        ts.id === id ? { ...ts, status: 'APPROVED' } : ts
+      ));
+      setShowConfirmation(null);
+      console.log('Timesheet approved successfully');
+    } catch (err) {
+      console.error('Failed to approve timesheet:', err);
+      alert('Failed to approve timesheet');
+    }
   };
 
-  const handleReject = (id: string) => {
-    setShowConfirmation(null);
-    // In a real app, this would call an API
-    console.log('Rejected timesheet:', id);
+  const handleReject = async (id: string) => {
+    try {
+      await client.put(`/vms/timesheets/${id}/client-approve`, { action: 'reject' });
+      setAllTimesheets(allTimesheets.map(ts =>
+        ts.id === id ? { ...ts, status: 'REJECTED' } : ts
+      ));
+      setShowConfirmation(null);
+      console.log('Timesheet rejected successfully');
+    } catch (err) {
+      console.error('Failed to reject timesheet:', err);
+      alert('Failed to reject timesheet');
+    }
   };
 
   return (
     <div className="space-y-6">
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{error}</p>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Timesheets</h1>
@@ -115,7 +169,7 @@ export const ClientTimesheets: React.FC = () => {
         <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-neutral-200 dark:border-neutral-700">
           <p className="text-sm text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Total Amount</p>
           <p className="text-3xl font-bold text-neutral-900 dark:text-white mt-2">
-            ${mockClientTimesheets.reduce((sum, ts) => sum + ts.amount, 0).toLocaleString()}
+            ${allTimesheets.reduce((sum, ts) => sum + ts.amount, 0).toLocaleString()}
           </p>
         </div>
       </div>

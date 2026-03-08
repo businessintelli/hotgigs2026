@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircleIcon,
   ClockIcon,
   EyeIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
+import client from '@/api/client';
 
 interface Timesheet {
   id: string;
@@ -104,8 +105,53 @@ const getStageIcon = (stage: string) => {
 };
 
 export const VMSTimesheets: React.FC = () => {
+  const [timesheets, setTimesheets] = useState<Timesheet[]>(mockTimesheets);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTimesheets = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await client.get('/vms/timesheets');
+        if (response.data && response.data.length > 0) {
+          setTimesheets(response.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch timesheets, using mock data:', err);
+        setError('Failed to load timesheets, using mock data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimesheets();
+  }, []);
+
+  const handleApproveTimesheet = async (id: string) => {
+    try {
+      await client.put(`/vms/timesheets/${id}/msp-review`, { action: 'approve' });
+      setTimesheets(timesheets.map(ts => ts.id === id ? { ...ts, status: 'CLIENT_APPROVAL' } : ts));
+      console.log('Timesheet approved');
+    } catch (err) {
+      console.error('Failed to approve timesheet:', err);
+      alert('Failed to approve timesheet');
+    }
+  };
+
+  const handleRejectTimesheet = async (id: string) => {
+    try {
+      await client.put(`/vms/timesheets/${id}/msp-review`, { action: 'reject' });
+      setTimesheets(timesheets.filter(ts => ts.id !== id));
+      console.log('Timesheet rejected');
+    } catch (err) {
+      console.error('Failed to reject timesheet:', err);
+      alert('Failed to reject timesheet');
+    }
+  };
 
   const stages = [
     { label: 'Submitted', key: 'SUBMITTED' },
@@ -116,15 +162,29 @@ export const VMSTimesheets: React.FC = () => {
 
   const stageCounts = stages.map(stage => ({
     ...stage,
-    count: mockTimesheets.filter(ts => ts.status === stage.key).length,
+    count: timesheets.filter(ts => ts.status === stage.key).length,
   }));
 
   const filteredTimesheets = filterStatus === 'ALL'
-    ? mockTimesheets
-    : mockTimesheets.filter(ts => ts.status === filterStatus);
+    ? timesheets
+    : timesheets.filter(ts => ts.status === filterStatus);
 
   return (
     <div className="space-y-6">
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{error}</p>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">VMS Timesheets</h1>
@@ -234,12 +294,14 @@ export const VMSTimesheets: React.FC = () => {
                         {(timesheet.status === 'SUBMITTED' || timesheet.status === 'MSP_REVIEW') && (
                           <>
                             <button
+                              onClick={() => handleApproveTimesheet(timesheet.id)}
                               className="px-2 py-1 text-xs bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded hover:bg-emerald-200 dark:hover:bg-emerald-900/40 transition-colors"
                               title="Approve"
                             >
                               Approve
                             </button>
                             <button
+                              onClick={() => handleRejectTimesheet(timesheet.id)}
                               className="px-2 py-1 text-xs bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-900/40 transition-colors"
                               title="Reject"
                             >

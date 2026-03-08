@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ClockIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
+import client from '@/api/client';
 
 interface ComplianceRecord {
   id: string;
@@ -105,12 +106,36 @@ const MetricCard: React.FC<{ icon: any; label: string; value: number; color: str
 );
 
 export const ComplianceDashboard: React.FC = () => {
-  const totalRequirements = mockComplianceRecords.length;
-  const completed = mockComplianceRecords.filter(r => r.status === 'COMPLETED').length;
-  const pending = mockComplianceRecords.filter(r => r.status === 'PENDING').length;
-  const expired = mockComplianceRecords.filter(r => r.status === 'EXPIRED').length;
-  const failed = mockComplianceRecords.filter(r => r.status === 'FAILED').length;
-  const complianceScore = Math.round((completed / totalRequirements) * 100);
+  const [records, setRecords] = useState<ComplianceRecord[]>(mockComplianceRecords);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchComplianceData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await client.get('/compliance/requirements');
+        if (response.data && response.data.length > 0) {
+          setRecords(response.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch compliance records, using mock data:', err);
+        setError('Failed to load compliance records, using mock data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComplianceData();
+  }, []);
+
+  const totalRequirements = records.length;
+  const completed = records.filter(r => r.status === 'COMPLETED').length;
+  const pending = records.filter(r => r.status === 'PENDING').length;
+  const expired = records.filter(r => r.status === 'EXPIRED').length;
+  const failed = records.filter(r => r.status === 'FAILED').length;
+  const complianceScore = totalRequirements > 0 ? Math.round((completed / totalRequirements) * 100) : 0;
 
   const getGaugeColor = (score: number) => {
     if (score >= 80) return 'text-emerald-500';
@@ -126,6 +151,20 @@ export const ComplianceDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{error}</p>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Compliance Dashboard</h1>
@@ -182,7 +221,7 @@ export const ComplianceDashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
-              {mockComplianceRecords.map((record) => (
+              {records.map((record) => (
                 <tr key={record.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-700/30 transition-colors">
                   <td className="px-6 py-4 text-sm font-medium text-neutral-900 dark:text-white">
                     {record.requirement}

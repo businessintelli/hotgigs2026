@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ChartBarIcon,
   ClockIcon,
 } from '@heroicons/react/24/outline';
+import client from '@/api/client';
 
 interface SLABreach {
   id: string;
@@ -128,15 +129,71 @@ const getMetricStatus = (target: number, current: number): 'good' | 'warning' | 
 };
 
 export const SLADashboard: React.FC = () => {
-  const openBreaches = mockSLABreaches.length;
+  const [breaches, setBreaches] = useState<SLABreach[]>(mockSLABreaches);
+  const [metrics, setMetrics] = useState<SLAConfig[]>(mockSLAMetrics);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSLAData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const [breachesResponse, metricsResponse] = await Promise.all([
+          client.get('/sla/breaches'),
+          client.get('/sla/configurations'),
+        ]);
+        if (breachesResponse.data && breachesResponse.data.length > 0) {
+          setBreaches(breachesResponse.data);
+        }
+        if (metricsResponse.data && metricsResponse.data.length > 0) {
+          setMetrics(metricsResponse.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch SLA data, using mock data:', err);
+        setError('Failed to load SLA data, using mock data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSLAData();
+  }, []);
+
+  const handleResolveBreach = async (id: string) => {
+    try {
+      await client.put(`/sla/breaches/${id}/resolve`);
+      setBreaches(breaches.filter(b => b.id !== id));
+      console.log('Breach resolved successfully');
+    } catch (err) {
+      console.error('Failed to resolve breach:', err);
+      alert('Failed to resolve breach');
+    }
+  };
+
+  const openBreaches = breaches.length;
   const resolvedBreaches = 12;
   const activeSLAs = 8;
-  const avgScore = Math.round(
-    mockSLAMetrics.reduce((sum, m) => sum + m.currentValue, 0) / mockSLAMetrics.length
-  );
+  const avgScore = metrics.length > 0 ? Math.round(
+    metrics.reduce((sum, m) => sum + m.currentValue, 0) / metrics.length
+  ) : 0;
 
   return (
     <div className="space-y-6">
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{error}</p>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">SLA Monitoring</h1>
@@ -160,7 +217,7 @@ export const SLADashboard: React.FC = () => {
             Active Breaches ({openBreaches})
           </h2>
           <div className="space-y-3">
-            {mockSLABreaches.map((breach) => (
+            {breaches.map((breach) => (
               <div key={breach.id} className="flex items-start gap-4 p-4 rounded-lg bg-neutral-50 dark:bg-neutral-700/30 border border-neutral-200 dark:border-neutral-700">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -172,7 +229,10 @@ export const SLADashboard: React.FC = () => {
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">{breach.client} • {breach.breachType}</p>
                   <p className="text-xs text-neutral-500 mt-1">Occurred: {new Date(breach.dateOccurred).toLocaleDateString()}</p>
                 </div>
-                <button className="px-3 py-1 bg-primary-500 text-white rounded-lg text-xs font-medium hover:bg-primary-600 transition-colors whitespace-nowrap">
+                <button
+                  onClick={() => handleResolveBreach(breach.id)}
+                  className="px-3 py-1 bg-primary-500 text-white rounded-lg text-xs font-medium hover:bg-primary-600 transition-colors whitespace-nowrap"
+                >
                   Resolve
                 </button>
               </div>
@@ -208,7 +268,7 @@ export const SLADashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
-              {mockSLAMetrics.map((metric) => {
+              {metrics.map((metric) => {
                 const status = getMetricStatus(metric.targetValue, metric.currentValue);
                 const percentage = Math.round((metric.currentValue / metric.targetValue) * 100);
                 const statusColor = status === 'good' ? 'bg-emerald-500' : status === 'warning' ? 'bg-yellow-500' : 'bg-red-500';

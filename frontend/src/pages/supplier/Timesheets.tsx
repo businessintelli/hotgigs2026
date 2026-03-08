@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PlusIcon,
   CheckCircleIcon,
   ClockIcon,
   EyeIcon,
 } from '@heroicons/react/24/outline';
+import client from '@/api/client';
 
 interface SupplierTimesheet {
   id: string;
@@ -87,6 +88,9 @@ const getStatusBadge = (status: string) => {
 };
 
 export const SupplierTimesheets: React.FC = () => {
+  const [allTimesheets, setAllTimesheets] = useState<SupplierTimesheet[]>(mockSupplierTimesheets);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -95,24 +99,87 @@ export const SupplierTimesheets: React.FC = () => {
     hours: '',
   });
 
-  const draftTimesheets = mockSupplierTimesheets.filter(ts => ts.status === 'DRAFT');
-  const submittedTimesheets = mockSupplierTimesheets.filter(ts => ts.status !== 'DRAFT');
+  useEffect(() => {
+    const fetchTimesheets = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await client.get('/vms/timesheets?status=submitted');
+        if (response.data && response.data.length > 0) {
+          setAllTimesheets(response.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch timesheets, using mock data:', err);
+        setError('Failed to load timesheets, using mock data');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSubmit = (e: React.FormEvent) => {
+    fetchTimesheets();
+  }, []);
+
+  const draftTimesheets = allTimesheets.filter(ts => ts.status === 'DRAFT');
+  const submittedTimesheets = allTimesheets.filter(ts => ts.status !== 'DRAFT');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would call an API
-    console.log('Submitted timesheet:', formData);
-    setFormData({ placement: '', period: '', hours: '' });
-    setIsCreateFormOpen(false);
+    try {
+      const newTimesheet = {
+        placement: formData.placement,
+        period: formData.period,
+        hours: parseFloat(formData.hours),
+      };
+      const response = await client.post('/vms/timesheets', newTimesheet);
+      setAllTimesheets([...allTimesheets, response.data]);
+      console.log('Timesheet submitted successfully:', response.data);
+      setFormData({ placement: '', period: '', hours: '' });
+      setIsCreateFormOpen(false);
+    } catch (err) {
+      console.error('Failed to submit timesheet:', err);
+      alert('Failed to submit timesheet');
+    }
   };
 
-  const totalPayAmount = mockSupplierTimesheets.reduce((sum, ts) => sum + ts.payAmount, 0);
-  const approvedAmount = mockSupplierTimesheets
+  const handleSubmitDraft = async (id: string) => {
+    try {
+      const timesheet = allTimesheets.find(ts => ts.id === id);
+      if (!timesheet) return;
+      const response = await client.post('/vms/timesheets', {
+        ...timesheet,
+        status: 'SUBMITTED',
+      });
+      setAllTimesheets(allTimesheets.map(ts =>
+        ts.id === id ? { ...ts, status: 'SUBMITTED', submittedDate: new Date().toISOString().split('T')[0] } : ts
+      ));
+      console.log('Draft timesheet submitted');
+    } catch (err) {
+      console.error('Failed to submit draft:', err);
+      alert('Failed to submit draft');
+    }
+  };
+
+  const totalPayAmount = allTimesheets.reduce((sum, ts) => sum + ts.payAmount, 0);
+  const approvedAmount = allTimesheets
     .filter(ts => ts.status === 'APPROVED')
     .reduce((sum, ts) => sum + ts.payAmount, 0);
 
   return (
     <div className="space-y-6">
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p className="text-sm text-yellow-800 dark:text-yellow-200">{error}</p>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Timesheets</h1>
@@ -271,6 +338,7 @@ export const SupplierTimesheets: React.FC = () => {
                     <td className="px-6 py-4 text-sm">
                       <div className="flex items-center gap-2">
                         <button
+                          onClick={() => handleSubmitDraft(timesheet.id)}
                           className="px-3 py-1 text-xs bg-primary-100 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 rounded hover:bg-primary-200 dark:hover:bg-primary-900/40 transition-colors font-medium"
                           title="Submit"
                         >

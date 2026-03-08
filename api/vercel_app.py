@@ -138,6 +138,9 @@ async def _seed_test_users(engine):
     
     async with async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)() as session:
         # Clear stale seed data
+        await session.execute(text("DELETE FROM rate_cards"))
+        await session.execute(text("DELETE FROM compliance_requirements"))
+        await session.execute(text("DELETE FROM sla_configurations"))
         await session.execute(text("DELETE FROM organization_memberships"))
         await session.execute(text("DELETE FROM organizations"))
         await session.execute(text("DELETE FROM users WHERE id IN (1, 2, 3, 4, 5, 6, 7)"))
@@ -274,7 +277,119 @@ async def _seed_test_users(engine):
         ), {
             "org_id": 1, "user_id": 5, "role": "RECRUITER", "now": now
         })
-        
+
+        # ── Rate Cards (3 records) ──────────────────────────────────────────
+        # 1. Software Development rate card for TechCorp
+        await session.execute(text(
+            "INSERT INTO rate_cards (client_org_id, job_category, location, skill_level, "
+            "bill_rate_min, bill_rate_max, pay_rate_min, pay_rate_max, overtime_multiplier, "
+            "weekend_multiplier, currency, effective_from, status, is_active, created_by, created_at, updated_at) "
+            "VALUES (:client_org_id, :job_category, :location, :skill_level, "
+            ":bill_rate_min, :bill_rate_max, :pay_rate_min, :pay_rate_max, :overtime_mult, "
+            ":weekend_mult, :currency, :effective_from, :status, 1, :created_by, :now, :now)"
+        ), {
+            "client_org_id": 2, "job_category": "Software Development", "location": "Remote",
+            "skill_level": "Senior", "bill_rate_min": 80.0, "bill_rate_max": 150.0,
+            "pay_rate_min": 60.0, "pay_rate_max": 120.0, "overtime_mult": 1.5, "weekend_mult": 1.25,
+            "currency": "USD", "effective_from": now.date(), "status": "ACTIVE", "created_by": 1, "now": now
+        })
+
+        # 2. Data Engineering rate card for TechCorp
+        await session.execute(text(
+            "INSERT INTO rate_cards (client_org_id, job_category, location, skill_level, "
+            "bill_rate_min, bill_rate_max, pay_rate_min, pay_rate_max, overtime_multiplier, "
+            "weekend_multiplier, currency, effective_from, status, is_active, created_by, created_at, updated_at) "
+            "VALUES (:client_org_id, :job_category, :location, :skill_level, "
+            ":bill_rate_min, :bill_rate_max, :pay_rate_min, :pay_rate_max, :overtime_mult, "
+            ":weekend_mult, :currency, :effective_from, :status, 1, :created_by, :now, :now)"
+        ), {
+            "client_org_id": 2, "job_category": "Data Engineering", "location": "New York",
+            "skill_level": "Senior", "bill_rate_min": 90.0, "bill_rate_max": 160.0,
+            "pay_rate_min": 70.0, "pay_rate_max": 130.0, "overtime_mult": 1.5, "weekend_mult": 1.25,
+            "currency": "USD", "effective_from": now.date(), "status": "ACTIVE", "created_by": 1, "now": now
+        })
+
+        # 3. QA Testing rate card (draft status)
+        await session.execute(text(
+            "INSERT INTO rate_cards (client_org_id, job_category, location, skill_level, "
+            "bill_rate_min, bill_rate_max, pay_rate_min, pay_rate_max, overtime_multiplier, "
+            "weekend_multiplier, currency, effective_from, status, is_active, created_by, created_at, updated_at) "
+            "VALUES (:client_org_id, :job_category, :location, :skill_level, "
+            ":bill_rate_min, :bill_rate_max, :pay_rate_min, :pay_rate_max, :overtime_mult, "
+            ":weekend_mult, :currency, :effective_from, :status, 1, :created_by, :now, :now)"
+        ), {
+            "client_org_id": 2, "job_category": "QA Testing", "location": "Remote",
+            "skill_level": "Mid-Level", "bill_rate_min": 50.0, "bill_rate_max": 90.0,
+            "pay_rate_min": 35.0, "pay_rate_max": 70.0, "overtime_mult": 1.5, "weekend_mult": 1.25,
+            "currency": "USD", "effective_from": now.date(), "status": "DRAFT", "created_by": 1, "now": now
+        })
+
+        # ── Compliance Requirements (4 records) ────────────────────────────
+        # 1. Background check requirement (org_id=1, mandatory, risk_level=8)
+        await session.execute(text(
+            "INSERT INTO compliance_requirements (organization_id, requirement_type, is_mandatory, "
+            "description, risk_level, is_active, created_at, updated_at) "
+            "VALUES (:org_id, :req_type, 1, :description, :risk_level, 1, :now, :now)"
+        ), {
+            "org_id": 1, "req_type": "BACKGROUND_CHECK", "description": "Criminal background check required for all placements",
+            "risk_level": "8", "now": now
+        })
+
+        # 2. Drug screening requirement (org_id=1, mandatory, risk_level=7)
+        await session.execute(text(
+            "INSERT INTO compliance_requirements (organization_id, requirement_type, is_mandatory, "
+            "description, risk_level, is_active, created_at, updated_at) "
+            "VALUES (:org_id, :req_type, 1, :description, :risk_level, 1, :now, :now)"
+        ), {
+            "org_id": 1, "req_type": "DRUG_TEST", "description": "Drug screening test required for all placements",
+            "risk_level": "7", "now": now
+        })
+
+        # 3. NDA requirement (org_id=1, mandatory, risk_level=5)
+        await session.execute(text(
+            "INSERT INTO compliance_requirements (organization_id, requirement_type, is_mandatory, "
+            "description, risk_level, is_active, created_at, updated_at) "
+            "VALUES (:org_id, :req_type, 1, :description, :risk_level, 1, :now, :now)"
+        ), {
+            "org_id": 1, "req_type": "CERTIFICATION", "description": "NDA signature required before placement",
+            "risk_level": "5", "now": now
+        })
+
+        # 4. Professional certification (org_id=2, not mandatory, risk_level=3)
+        await session.execute(text(
+            "INSERT INTO compliance_requirements (organization_id, requirement_type, is_mandatory, "
+            "description, risk_level, is_active, created_at, updated_at) "
+            "VALUES (:org_id, :req_type, 0, :description, :risk_level, 1, :now, :now)"
+        ), {
+            "org_id": 2, "req_type": "CERTIFICATION", "description": "Professional certifications relevant to job category",
+            "risk_level": "3", "now": now
+        })
+
+        # ── SLA Configurations (2 records) ─────────────────────────────────
+        # 1. Standard SLA for org_id=1
+        await session.execute(text(
+            "INSERT INTO sla_configurations (organization_id, name, response_time_hours, fill_time_days, "
+            "min_quality_score, min_acceptance_rate, min_retention_days, response_time_penalty, is_active, created_at, updated_at) "
+            "VALUES (:org_id, :name, :response_hours, :fill_days, :quality_score, :acceptance_rate, "
+            ":retention_days, :penalty, 1, :now, :now)"
+        ), {
+            "org_id": 1, "name": "Standard SLA", "response_hours": 24, "fill_days": 15,
+            "quality_score": 70.0, "acceptance_rate": 0.8, "retention_days": 90,
+            "penalty": 500.0, "now": now
+        })
+
+        # 2. Premium SLA for org_id=2
+        await session.execute(text(
+            "INSERT INTO sla_configurations (organization_id, name, response_time_hours, fill_time_days, "
+            "min_quality_score, min_acceptance_rate, min_retention_days, response_time_penalty, is_active, created_at, updated_at) "
+            "VALUES (:org_id, :name, :response_hours, :fill_days, :quality_score, :acceptance_rate, "
+            ":retention_days, :penalty, 1, :now, :now)"
+        ), {
+            "org_id": 2, "name": "Premium SLA", "response_hours": 8, "fill_days": 7,
+            "quality_score": 85.0, "acceptance_rate": 0.9, "retention_days": 180,
+            "penalty": 1000.0, "now": now
+        })
+
         await session.commit()
     
     print("Seeded multi-tenant demo organizations and users")
@@ -427,7 +542,7 @@ except Exception as e:
     # Fallback: load individual routers
     import importlib
     for name, tag in [
-        ("auth", "Auth"), ("dashboard", "Dashboard"),
+        ("auth", "Auth"), ("dashboard", "Dashboard"), ("reports", "Reports & Analytics"),
         ("interviews", "Interviews"), ("matching", "Matching"),
         ("offers", "Offers"), ("resumes", "Resumes"),
         ("submissions", "Submissions"), ("suppliers", "Suppliers"),
