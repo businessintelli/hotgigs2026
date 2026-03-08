@@ -563,6 +563,7 @@ except Exception as e:
         ("search", "Advanced Search"), ("automation", "Automation"),
         ("crm", "Candidate CRM"), ("ats", "ATS Enhancement"),
         ("bulk_operations", "Bulk Operations"),
+        ("aggregate_reports", "Aggregate Reports"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

@@ -48,6 +48,7 @@ from api.v1 import (
     search,
     automation,
     bulk_operations,
+    aggregate_reports,
 )
 
 logger = logging.getLogger(__name__)
@@ -127,6 +128,9 @@ router.include_router(automation.router, tags=["Automation & Notifications"])
 
 # ── Bulk Operations: Import, Export, Batch AI Analysis ──
 router.include_router(bulk_operations.router, tags=["Bulk Operations"])
+
+# ── Aggregate Reports: Cross-Dimensional Performance Analytics ──
+router.include_router(aggregate_reports.router, tags=["Aggregate Reports"])
 
 
 @router.get("", tags=["Status"])

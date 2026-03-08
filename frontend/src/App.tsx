@@ -39,6 +39,9 @@ import { AutomationCenter } from '@/pages/AutomationCenter';
 // ATS Workflow
 import { ATSWorkflow } from '@/pages/ATSWorkflow';
 
+// Aggregate Reports
+import { AggregateReports } from '@/pages/AggregateReports';
+
 // Data Operations Pages
 import { BulkImportCenter } from '@/pages/BulkImportCenter';
 import { BulkAnalysisDashboard } from '@/pages/BulkAnalysisDashboard';
@@ -162,6 +165,7 @@ function App() {
           <Route path="/advanced-search" element={<AuthenticatedLayout title="Advanced Search"><AdvancedSearch /></AuthenticatedLayout>} />
           <Route path="/automation" element={<AuthenticatedLayout title="Automation Center"><AutomationCenter /></AuthenticatedLayout>} />
           <Route path="/ats-workflow" element={<AuthenticatedLayout title="ATS Workflow"><ATSWorkflow /></AuthenticatedLayout>} />
+          <Route path="/aggregate-reports" element={<AuthenticatedLayout title="Aggregate Reports"><AggregateReports /></AuthenticatedLayout>} />
 
           {/* Data Operations Routes */}
           <Route path="/bulk-import" element={<AuthenticatedLayout title="Bulk Import Center"><BulkImportCenter /></AuthenticatedLayout>} />
@@ -281,6 +285,11 @@ function App() {
           <Route path="/msp/ats-workflow" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="ATS Workflow"><ATSWorkflow /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/aggregate-reports" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Aggregate Reports"><AggregateReports /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 
