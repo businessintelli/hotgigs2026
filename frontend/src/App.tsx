@@ -36,6 +36,11 @@ import { InterviewInsights } from '@/pages/InterviewInsights';
 import { AdvancedSearch } from '@/pages/AdvancedSearch';
 import { AutomationCenter } from '@/pages/AutomationCenter';
 
+// Data Operations Pages
+import { BulkImportCenter } from '@/pages/BulkImportCenter';
+import { BulkAnalysisDashboard } from '@/pages/BulkAnalysisDashboard';
+import { ExportCenter } from '@/pages/ExportCenter';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -154,6 +159,11 @@ function App() {
           <Route path="/advanced-search" element={<AuthenticatedLayout title="Advanced Search"><AdvancedSearch /></AuthenticatedLayout>} />
           <Route path="/automation" element={<AuthenticatedLayout title="Automation Center"><AutomationCenter /></AuthenticatedLayout>} />
 
+          {/* Data Operations Routes */}
+          <Route path="/bulk-import" element={<AuthenticatedLayout title="Bulk Import Center"><BulkImportCenter /></AuthenticatedLayout>} />
+          <Route path="/bulk-analysis" element={<AuthenticatedLayout title="Bulk Analysis Dashboard"><BulkAnalysisDashboard /></AuthenticatedLayout>} />
+          <Route path="/export-center" element={<AuthenticatedLayout title="Export Center"><ExportCenter /></AuthenticatedLayout>} />
+
           {/* MSP Portal Routes */}
           <Route path="/msp/dashboard" element={
             <OrgTypeGuard allowedTypes={['msp']}>
@@ -262,6 +272,23 @@ function App() {
           <Route path="/msp/automation" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Automation Center"><AutomationCenter /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP Data Operations Routes */}
+          <Route path="/msp/bulk-import" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Bulk Import Center"><BulkImportCenter /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/bulk-analysis" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Bulk Analysis Dashboard"><BulkAnalysisDashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/export-center" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Export Center"><ExportCenter /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

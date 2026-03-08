@@ -115,6 +115,7 @@ async def _get_engine():
                 "models.rate_card", "models.compliance",
                 "models.sla", "models.expense",
                 "models.crm", "models.ats", "models.automation",
+                "models.import_job",
             ]:
                 try: __import__(m)
                 except: pass
@@ -561,6 +562,7 @@ except Exception as e:
         ("auto_invoicing", "Auto Invoicing"),
         ("search", "Advanced Search"), ("automation", "Automation"),
         ("crm", "Candidate CRM"), ("ats", "ATS Enhancement"),
+        ("bulk_operations", "Bulk Operations"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

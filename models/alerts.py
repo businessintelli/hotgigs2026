@@ -35,15 +35,15 @@ class AlertRule(BaseModel):
 
 
 class Notification(BaseModel):
-    """Individual notification record."""
+    """Individual notification record from alert rules."""
 
-    __tablename__ = "notifications"
+    __tablename__ = "notifications_alerts"
     __table_args__ = (
-        Index("ix_notifications_user_id", "user_id"),
-        Index("ix_notifications_alert_rule_id", "alert_rule_id"),
-        Index("ix_notifications_channel", "channel"),
-        Index("ix_notifications_status", "status"),
-        Index("ix_notifications_entity_type_id", "entity_type", "entity_id"),
+        Index("ix_notifications_alerts_user_id", "user_id"),
+        Index("ix_notifications_alerts_alert_rule_id", "alert_rule_id"),
+        Index("ix_notifications_alerts_channel", "channel"),
+        Index("ix_notifications_alerts_status", "status"),
+        Index("ix_notifications_alerts_entity_type_id", "entity_type", "entity_id"),
     )
 
     user_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"), nullable=True)

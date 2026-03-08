@@ -572,3 +572,28 @@ class NotificationCategory(str, Enum):
     SLA = "sla"
     TIMESHEET = "timesheet"
     SYSTEM = "system"
+
+
+# --- Background Import Job Enums ---
+
+class ImportJobType(str, Enum):
+    """Type of background import job."""
+    RESUME_UPLOAD = "resume_upload"
+    RESUME_EXCEL = "resume_excel"
+    CANDIDATE_EXCEL = "candidate_excel"
+    REQUIREMENT_EXCEL = "requirement_excel"
+    PLACEMENT_EXCEL = "placement_excel"
+    ASSOCIATE_EXCEL = "associate_excel"
+    BATCH_SCORE = "batch_score"
+    SKILL_EXTRACTION = "skill_extraction"
+    PLACEMENT_PREDICTION = "placement_prediction"
+    MARKET_ANALYSIS = "market_analysis"
+
+
+class ImportJobStatus(str, Enum):
+    """Status of an import job."""
+    QUEUED = "queued"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    COMPLETED_WITH_ERRORS = "completed_with_errors"
+    FAILED = "failed"

@@ -47,6 +47,7 @@ from api.v1 import (
     ats,
     search,
     automation,
+    bulk_operations,
 )
 
 logger = logging.getLogger(__name__)
@@ -124,6 +125,9 @@ router.include_router(ats.router, tags=["ATS Enhancement"])
 router.include_router(search.router, tags=["Advanced Search"])
 router.include_router(automation.router, tags=["Automation & Notifications"])
 
+# ── Bulk Operations: Import, Export, Batch AI Analysis ──
+router.include_router(bulk_operations.router, tags=["Bulk Operations"])
+
 
 @router.get("", tags=["Status"])
 async def v1_status():
@@ -148,10 +152,11 @@ async def v1_status():
             "candidate_crm": ["crm"],
             "ats_enhancement": ["ats"],
             "phase_4": ["search", "automation"],
+            "bulk_operations": ["bulk_operations"],
         },
-        "total_agents": 41,
-        "total_api_modules": 41,
+        "total_agents": 42,
+        "total_api_modules": 42,
     }
 
 
-logger.info("V1 router initialized with all 41 sub-routers (Phase 4 Search & Automation added)")
+logger.info("V1 router initialized with all 42 sub-routers (Bulk Operations added)")

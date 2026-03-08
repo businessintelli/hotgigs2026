@@ -28,6 +28,8 @@ import {
   EyeIcon,
   ExclamationTriangleIcon,
   MagnifyingGlassIcon,
+  CloudArrowUpIcon,
+  ArrowDownTrayIcon,
 } from '@heroicons/react/24/outline';
 import { useUIStore } from '@/store/uiStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -101,6 +103,14 @@ const mspNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/msp/recruiter-dashboard' },
       { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/msp/applicant-tracker' },
       { icon: ChartBarIcon, label: 'AI Predictions', href: '/msp/ai-predictions' },
+    ],
+  },
+  {
+    label: 'DATA OPERATIONS',
+    items: [
+      { icon: CloudArrowUpIcon, label: 'Bulk Import', href: '/msp/bulk-import' },
+      { icon: SparklesIcon, label: 'Bulk Analysis', href: '/msp/bulk-analysis' },
+      { icon: ArrowDownTrayIcon, label: 'Export Center', href: '/msp/export-center' },
     ],
   },
   {
@@ -233,6 +243,14 @@ const defaultNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/recruiter-dashboard' },
       { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/applicant-tracker' },
       { icon: ChartBarIcon, label: 'AI Predictions', href: '/ai-predictions' },
+    ],
+  },
+  {
+    label: 'DATA OPERATIONS',
+    items: [
+      { icon: CloudArrowUpIcon, label: 'Bulk Import', href: '/bulk-import' },
+      { icon: SparklesIcon, label: 'Bulk Analysis', href: '/bulk-analysis' },
+      { icon: ArrowDownTrayIcon, label: 'Export Center', href: '/export-center' },
     ],
   },
   {

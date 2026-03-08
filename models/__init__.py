@@ -45,6 +45,9 @@ from .enums import (
     ActionType,
     NotificationType,
     NotificationCategory,
+    # Import Job Enums
+    ImportJobType,
+    ImportJobStatus,
 )
 from .organization import Organization
 from .customer import Customer
@@ -69,7 +72,15 @@ from .user import User
 from .audit import AuditLog
 from .harvest import HarvestSource, HarvestJob, HarvestResult, CandidateSourceMapping
 from .marketing import MarketingCampaign, Hotlist, CampaignDistribution, EmailCampaignTracking
-from .alerts import AlertRule, Notification, NotificationPreference
+# Import automation before alerts to register Notification from automation (newer version)
+from .automation import (
+    SavedSearch,
+    AutomationRule,
+    Notification,
+)
+from .alerts import AlertRule, NotificationPreference
+# Note: alerts.Notification is not imported here to avoid table name conflicts
+# Services that need alerts.Notification will import it directly from models.alerts
 from .tenant_management import (
     OrganizationMembership,
     OrganizationInvitation,
@@ -96,11 +107,7 @@ from .ats import (
     OnboardingTask,
     InterviewFeedback,
 )
-from .automation import (
-    SavedSearch,
-    AutomationRule,
-    Notification,
-)
+from .import_job import ImportJob
 
 __all__ = [
     "BaseModel",
@@ -151,6 +158,9 @@ __all__ = [
     "ActionType",
     "NotificationType",
     "NotificationCategory",
+    # Import Job Enums
+    "ImportJobType",
+    "ImportJobStatus",
     # Core entities
     "Organization",
     "Customer",
@@ -184,8 +194,9 @@ __all__ = [
     "CampaignDistribution",
     "EmailCampaignTracking",
     "AlertRule",
-    "Notification",
     "NotificationPreference",
+    # Note: Notification is exported from automation (newer version)
+    # alerts.Notification is imported directly by alerts_service.py to avoid conflicts
     # Tenant management
     "OrganizationMembership",
     "OrganizationInvitation",
@@ -218,10 +229,12 @@ __all__ = [
     # Phase 4: Automation & Search
     "SavedSearch",
     "AutomationRule",
+    # Background Jobs
+    "ImportJob",
+    # Automation Models (Notification from automation, not alerts)
     "Notification",
 ]
 from models.rate_card import RateCard, RateCardEntry
 from models.compliance import ComplianceRequirement, ComplianceRecord, ComplianceScore
 from models.sla import SLAConfiguration, SLABreachRecord
 from models.expense import ExpenseEntry
-from models.automation import SavedSearch, AutomationRule, Notification
