@@ -24,12 +24,18 @@ import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
 import { SuppliersList } from '@/pages/msp/SuppliersList';
 import { SubmissionsPipeline } from '@/pages/msp/SubmissionsPipeline';
+import { RateCards } from '@/pages/msp/RateCards';
+import { ComplianceDashboard } from '@/pages/msp/ComplianceDashboard';
+import { SLADashboard } from '@/pages/msp/SLADashboard';
+import { VMSTimesheets } from '@/pages/msp/VMSTimesheets';
 
 // Client Pages
 import { ClientDashboard } from '@/pages/client/ClientDashboard';
+import { ClientTimesheets } from '@/pages/client/Timesheets';
 
 // Supplier Pages
 import { SupplierDashboard } from '@/pages/supplier/SupplierDashboard';
+import { SupplierTimesheets } from '@/pages/supplier/Timesheets';
 
 // Layout
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -115,6 +121,10 @@ function App() {
           <Route path="/msp/clients" element={<AuthenticatedLayout title="Clients"><ClientsList /></AuthenticatedLayout>} />
           <Route path="/msp/suppliers" element={<AuthenticatedLayout title="Suppliers"><SuppliersList /></AuthenticatedLayout>} />
           <Route path="/msp/submissions" element={<AuthenticatedLayout title="Submissions Pipeline"><SubmissionsPipeline /></AuthenticatedLayout>} />
+          <Route path="/msp/rate-cards" element={<AuthenticatedLayout title="Rate Cards"><RateCards /></AuthenticatedLayout>} />
+          <Route path="/msp/compliance" element={<AuthenticatedLayout title="Compliance"><ComplianceDashboard /></AuthenticatedLayout>} />
+          <Route path="/msp/sla" element={<AuthenticatedLayout title="SLA Monitoring"><SLADashboard /></AuthenticatedLayout>} />
+          <Route path="/msp/vms-timesheets" element={<AuthenticatedLayout title="VMS Timesheets"><VMSTimesheets /></AuthenticatedLayout>} />
           <Route path="/msp/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
           <Route path="/msp/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
           <Route path="/msp/distributions" element={<AuthenticatedLayout title="Distributions">{PlaceholderPage('Distributions')()}</AuthenticatedLayout>} />
@@ -124,6 +134,7 @@ function App() {
           <Route path="/client/requirements" element={<AuthenticatedLayout title="Requirements">{PlaceholderPage('Requirements')()}</AuthenticatedLayout>} />
           <Route path="/client/requirements/new" element={<AuthenticatedLayout title="New Requirement">{PlaceholderPage('New Requirement')()}</AuthenticatedLayout>} />
           <Route path="/client/submissions" element={<AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>} />
+          <Route path="/client/timesheets" element={<AuthenticatedLayout title="Timesheets"><ClientTimesheets /></AuthenticatedLayout>} />
           <Route path="/client/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
           <Route path="/client/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />
           <Route path="/client/interviews" element={<AuthenticatedLayout title="Interviews">{PlaceholderPage('Interviews')()}</AuthenticatedLayout>} />
@@ -132,6 +143,7 @@ function App() {
           <Route path="/supplier/dashboard" element={<AuthenticatedLayout title="Supplier Dashboard"><SupplierDashboard /></AuthenticatedLayout>} />
           <Route path="/supplier/opportunities" element={<AuthenticatedLayout title="Opportunities">{PlaceholderPage('Opportunities')()}</AuthenticatedLayout>} />
           <Route path="/supplier/submissions" element={<AuthenticatedLayout title="Submissions">{PlaceholderPage('Submissions')()}</AuthenticatedLayout>} />
+          <Route path="/supplier/timesheets" element={<AuthenticatedLayout title="Timesheets"><SupplierTimesheets /></AuthenticatedLayout>} />
           <Route path="/supplier/placements" element={<AuthenticatedLayout title="Placements">{PlaceholderPage('Placements')()}</AuthenticatedLayout>} />
           <Route path="/supplier/performance" element={<AuthenticatedLayout title="Performance">{PlaceholderPage('Performance')()}</AuthenticatedLayout>} />
           <Route path="/supplier/analytics" element={<AuthenticatedLayout title="Analytics">{PlaceholderPage('Analytics')()}</AuthenticatedLayout>} />

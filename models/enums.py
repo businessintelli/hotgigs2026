@@ -373,3 +373,53 @@ class AuditAction(str, Enum):
     REJECT = "reject"
     FORWARD = "forward"
     FEEDBACK = "feedback"
+
+class RateCardStatus(str, Enum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ARCHIVED = "archived"
+    EXPIRED = "expired"
+
+class ComplianceStatus(str, Enum):
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    EXPIRED = "expired"
+    FAILED = "failed"
+
+class ComplianceType(str, Enum):
+    BACKGROUND_CHECK = "background_check"
+    DRUG_TEST = "drug_test"
+    CERTIFICATION = "certification"
+    INSURANCE = "insurance"
+    MEDICAL_EXAM = "medical_exam"
+    REFERENCE_CHECK = "reference_check"
+    SKILLS_VERIFICATION = "skills_verification"
+
+class SLAMetric(str, Enum):
+    RESPONSE_TIME = "response_time"
+    FILL_TIME = "fill_time"
+    QUALITY_SCORE = "quality_score"
+    ACCEPTANCE_RATE = "acceptance_rate"
+    RETENTION_RATE = "retention_rate"
+
+class SLASeverity(str, Enum):
+    CRITICAL = "critical"
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+
+class ExpenseStatus(str, Enum):
+    DRAFT = "draft"
+    SUBMITTED = "submitted"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    REIMBURSED = "reimbursed"
+
+class ExpenseCategory(str, Enum):
+    TRAVEL = "travel"
+    EQUIPMENT = "equipment"
+    SOFTWARE = "software"
+    TRAINING = "training"
+    MEALS = "meals"
+    OTHER = "other"

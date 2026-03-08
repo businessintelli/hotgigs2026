@@ -20,6 +20,13 @@ from .enums import (
     PlacementStatus,
     TimesheetFrequency,
     AuditAction,
+    RateCardStatus,
+    ComplianceStatus,
+    ComplianceType,
+    SLAMetric,
+    SLASeverity,
+    ExpenseStatus,
+    ExpenseCategory,
 )
 from .organization import Organization
 from .customer import Customer
@@ -62,7 +69,7 @@ from .msp_workflow import (
 __all__ = [
     "BaseModel",
     "TenantBaseModel",
-    # Enums
+        # Enums
     "OrganizationType",
     "OrgOnboardingStatus",
     "RequirementStatus",
@@ -83,6 +90,13 @@ __all__ = [
     "PlacementStatus",
     "TimesheetFrequency",
     "AuditAction",
+    "RateCardStatus",
+    "ComplianceStatus",
+    "ComplianceType",
+    "SLAMetric",
+    "SLASeverity",
+    "ExpenseStatus",
+    "ExpenseCategory",
     # Core entities
     "Organization",
     "Customer",
@@ -129,4 +143,16 @@ __all__ = [
     "MSPReview",
     "ClientFeedback",
     "PlacementRecord",
+    "RateCard",
+    "RateCardEntry",
+    "ComplianceRequirement",
+    "ComplianceRecord",
+    "ComplianceScore",
+    "SLAConfiguration",
+    "SLABreachRecord",
+    "ExpenseEntry",
 ]
+from models.rate_card import RateCard, RateCardEntry
+from models.compliance import ComplianceRequirement, ComplianceRecord, ComplianceScore
+from models.sla import SLAConfiguration, SLABreachRecord
+from models.expense import ExpenseEntry

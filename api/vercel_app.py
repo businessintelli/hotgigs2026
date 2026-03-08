@@ -111,7 +111,9 @@ async def _get_engine():
                 "models.supplier", "models.contract", "models.referral",
                 "models.customer", "models.security", "models.client",
                 "models.messaging", "models.payment", "models.timesheet",
-                "models.invoice",
+                "models.invoice", "models.msp_workflow",
+                "models.rate_card", "models.compliance",
+                "models.sla", "models.expense",
             ]:
                 try: __import__(m)
                 except: pass
@@ -437,6 +439,9 @@ except Exception as e:
         ("timesheets", "Timesheets"), ("invoices", "Invoices"),
         ("organizations", "Organizations"), ("msp", "MSP"),
         ("client_portal", "Client Portal"), ("supplier_portal", "Supplier Portal"),
+        ("rate_cards", "Rate Cards"), ("compliance_mgmt", "Compliance"),
+        ("sla", "SLA"), ("vms_timesheets", "VMS Timesheets"),
+        ("auto_invoicing", "Auto Invoicing"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

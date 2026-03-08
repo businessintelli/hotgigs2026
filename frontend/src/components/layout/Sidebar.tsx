@@ -26,6 +26,7 @@ import {
   InboxIcon,
   PaperAirplaneIcon,
   EyeIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { useUIStore } from '@/store/uiStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -63,6 +64,15 @@ const mspNavigation: NavGroup[] = [
       { icon: ClipboardDocumentListIcon, label: 'Submissions Pipeline', href: '/msp/submissions' },
       { icon: CalendarIcon, label: 'Interviews', href: '/interviews' },
       { icon: BriefcaseIcon, label: 'Placements', href: '/msp/placements' },
+      { icon: ClipboardDocumentListIcon, label: 'VMS Timesheets', href: '/msp/vms-timesheets' },
+    ],
+  },
+  {
+    label: 'VMS OPERATIONS',
+    items: [
+      { icon: ChartBarIcon, label: 'Rate Cards', href: '/msp/rate-cards' },
+      { icon: ShieldExclamationIcon, label: 'Compliance', href: '/msp/compliance' },
+      { icon: ExclamationTriangleIcon, label: 'SLA Monitoring', href: '/msp/sla' },
     ],
   },
   {
@@ -103,6 +113,12 @@ const clientNavigation: NavGroup[] = [
     ],
   },
   {
+    label: 'VMS',
+    items: [
+      { icon: ClipboardDocumentListIcon, label: 'Timesheets', href: '/client/timesheets' },
+    ],
+  },
+  {
     label: 'INSIGHTS',
     items: [
       { icon: ChartBarIcon, label: 'Analytics', href: '/client/analytics' },
@@ -128,6 +144,7 @@ const supplierNavigation: NavGroup[] = [
     items: [
       { icon: PaperAirplaneIcon, label: 'My Submissions', href: '/supplier/submissions' },
       { icon: BriefcaseIcon, label: 'Placements', href: '/supplier/placements' },
+      { icon: ClipboardDocumentListIcon, label: 'Timesheets', href: '/supplier/timesheets' },
     ],
   },
   {

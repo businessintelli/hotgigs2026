@@ -36,6 +36,11 @@ from api.v1 import (
     msp,
     client_portal,
     supplier_portal,
+    rate_cards,
+    compliance_mgmt,
+    sla,
+    vms_timesheets,
+    auto_invoicing,
 )
 
 logger = logging.getLogger(__name__)
@@ -96,6 +101,13 @@ router.include_router(msp.router, tags=["MSP Portal"])
 router.include_router(client_portal.router, tags=["Client Portal"])
 router.include_router(supplier_portal.router, tags=["Supplier Portal"])
 
+# ── VMS Enhancement (Batch D) ──
+router.include_router(rate_cards.router, tags=["Rate Cards"])
+router.include_router(compliance_mgmt.router, tags=["Compliance Management"])
+router.include_router(sla.router, tags=["SLA Management"])
+router.include_router(vms_timesheets.router, tags=["VMS Timesheets"])
+router.include_router(auto_invoicing.router, tags=["Auto Invoicing"])
+
 
 @router.get("", tags=["Status"])
 async def v1_status():
@@ -116,10 +128,11 @@ async def v1_status():
             "financial": ["payments", "timesheets", "invoices"],
             "admin": ["alerts", "security", "admin", "cicd"],
             "vms_msp": ["organizations", "msp", "client_portal", "supplier_portal"],
+            "vms_enhancement": ["rate_cards", "compliance_mgmt", "sla", "vms_timesheets", "auto_invoicing"],
         },
         "total_agents": 37,
-        "total_api_modules": 31,
+        "total_api_modules": 36,
     }
 
 
-logger.info("V1 router initialized with all 27 sub-routers")
+logger.info("V1 router initialized with all 32 sub-routers (Batch D VMS enhancement added)")
