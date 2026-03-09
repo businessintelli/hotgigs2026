@@ -30,6 +30,7 @@ import {
   MagnifyingGlassIcon,
   CloudArrowUpIcon,
   ArrowDownTrayIcon,
+  BeakerIcon,
 } from '@heroicons/react/24/outline';
 import { useUIStore } from '@/store/uiStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -128,6 +129,7 @@ const mspNavigation: NavGroup[] = [
       { icon: DocumentChartBarIcon, label: 'Reports', href: '/reports' },
       { icon: ChartBarIcon, label: 'Aggregate Reports', href: '/msp/aggregate-reports' },
       { icon: DocumentChartBarIcon, label: 'Custom Reports', href: '/msp/custom-reports', roleRequired: 'admin' },
+      { icon: BeakerIcon, label: 'Testing Dashboard', href: '/msp/testing-dashboard', roleRequired: 'admin' },
       { icon: Cog6ToothIcon, label: 'Settings', href: '/settings' },
       { icon: ShieldExclamationIcon, label: 'Admin', href: '/admin', roleRequired: 'admin' },
     ],
@@ -270,6 +272,7 @@ const defaultNavigation: NavGroup[] = [
       { icon: DocumentChartBarIcon, label: 'Reports', href: '/reports' },
       { icon: ChartBarIcon, label: 'Aggregate Reports', href: '/aggregate-reports' },
       { icon: DocumentChartBarIcon, label: 'Custom Reports', href: '/custom-reports', roleRequired: 'admin' },
+      { icon: BeakerIcon, label: 'Testing Dashboard', href: '/testing-dashboard', roleRequired: 'admin' },
       { icon: Cog6ToothIcon, label: 'Settings', href: '/settings' },
       { icon: ShieldExclamationIcon, label: 'Admin', href: '/admin', roleRequired: 'admin' },
     ],

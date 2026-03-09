@@ -565,6 +565,7 @@ except Exception as e:
         ("bulk_operations", "Bulk Operations"),
         ("aggregate_reports", "Aggregate Reports"),
         ("custom_reports", "Custom Reports"),
+        ("test_agent", "Testing Agent"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

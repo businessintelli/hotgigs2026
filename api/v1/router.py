@@ -50,6 +50,7 @@ from api.v1 import (
     bulk_operations,
     aggregate_reports,
     custom_reports,
+    test_agent,
 )
 
 logger = logging.getLogger(__name__)
@@ -136,6 +137,9 @@ router.include_router(aggregate_reports.router, tags=["Aggregate Reports"])
 # ── Custom Report Builder & Scheduler ──
 router.include_router(custom_reports.router, tags=["Custom Reports"])
 
+# ── E2E Testing Agent ──
+router.include_router(test_agent.router)
+
 
 @router.get("", tags=["Status"])
 async def v1_status():
@@ -162,9 +166,9 @@ async def v1_status():
             "phase_4": ["search", "automation"],
             "bulk_operations": ["bulk_operations"],
         },
-        "total_agents": 42,
-        "total_api_modules": 42,
+        "total_agents": 43,
+        "total_api_modules": 43,
     }
 
 
-logger.info("V1 router initialized with all 42 sub-routers (Bulk Operations added)")
+logger.info("V1 router initialized with all 43 sub-routers (E2E Testing Agent added)")

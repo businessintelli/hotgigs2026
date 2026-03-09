@@ -45,6 +45,9 @@ import { AggregateReports } from '@/pages/AggregateReports';
 // Custom Report Builder
 import { CustomReportBuilder } from '@/pages/CustomReportBuilder';
 
+// Testing Dashboard
+import { TestingDashboard } from '@/pages/TestingDashboard';
+
 // Data Operations Pages
 import { BulkImportCenter } from '@/pages/BulkImportCenter';
 import { BulkAnalysisDashboard } from '@/pages/BulkAnalysisDashboard';
@@ -170,6 +173,7 @@ function App() {
           <Route path="/ats-workflow" element={<AuthenticatedLayout title="ATS Workflow"><ATSWorkflow /></AuthenticatedLayout>} />
           <Route path="/aggregate-reports" element={<AuthenticatedLayout title="Aggregate Reports"><AggregateReports /></AuthenticatedLayout>} />
           <Route path="/custom-reports" element={<AuthenticatedLayout title="Custom Report Builder"><CustomReportBuilder /></AuthenticatedLayout>} />
+          <Route path="/testing-dashboard" element={<AuthenticatedLayout title="E2E Testing Dashboard"><TestingDashboard /></AuthenticatedLayout>} />
 
           {/* Data Operations Routes */}
           <Route path="/bulk-import" element={<AuthenticatedLayout title="Bulk Import Center"><BulkImportCenter /></AuthenticatedLayout>} />
@@ -299,6 +303,11 @@ function App() {
           <Route path="/msp/custom-reports" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Custom Report Builder"><CustomReportBuilder /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/testing-dashboard" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="E2E Testing Dashboard"><TestingDashboard /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 
