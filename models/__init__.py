@@ -48,6 +48,11 @@ from .enums import (
     # Import Job Enums
     ImportJobType,
     ImportJobStatus,
+    # Custom Reports Enums
+    ReportType,
+    DeliveryMethod,
+    ExportFormat,
+    ReportScheduleStatus,
 )
 from .organization import Organization
 from .customer import Customer
@@ -108,6 +113,7 @@ from .ats import (
     InterviewFeedback,
 )
 from .import_job import ImportJob
+from .custom_reports import SavedReport, ReportSchedule
 
 __all__ = [
     "BaseModel",
@@ -161,6 +167,11 @@ __all__ = [
     # Import Job Enums
     "ImportJobType",
     "ImportJobStatus",
+    # Custom Reports Enums
+    "ReportType",
+    "DeliveryMethod",
+    "ExportFormat",
+    "ReportScheduleStatus",
     # Core entities
     "Organization",
     "Customer",
@@ -231,6 +242,9 @@ __all__ = [
     "AutomationRule",
     # Background Jobs
     "ImportJob",
+    # Custom Reports
+    "SavedReport",
+    "ReportSchedule",
     # Automation Models (Notification from automation, not alerts)
     "Notification",
 ]

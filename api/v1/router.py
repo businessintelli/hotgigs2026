@@ -49,6 +49,7 @@ from api.v1 import (
     automation,
     bulk_operations,
     aggregate_reports,
+    custom_reports,
 )
 
 logger = logging.getLogger(__name__)
@@ -131,6 +132,9 @@ router.include_router(bulk_operations.router, tags=["Bulk Operations"])
 
 # ── Aggregate Reports: Cross-Dimensional Performance Analytics ──
 router.include_router(aggregate_reports.router, tags=["Aggregate Reports"])
+
+# ── Custom Report Builder & Scheduler ──
+router.include_router(custom_reports.router, tags=["Custom Reports"])
 
 
 @router.get("", tags=["Status"])

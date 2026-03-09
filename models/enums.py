@@ -597,3 +597,31 @@ class ImportJobStatus(str, Enum):
     COMPLETED = "completed"
     COMPLETED_WITH_ERRORS = "completed_with_errors"
     FAILED = "failed"
+
+
+class ReportType(str, Enum):
+    """Type of report."""
+    CUSTOM = "custom"
+    PREDEFINED = "predefined"
+
+
+class DeliveryMethod(str, Enum):
+    """Delivery method for scheduled reports."""
+    EMAIL = "email"
+    IN_APP = "in_app"
+    BOTH = "both"
+
+
+class ExportFormat(str, Enum):
+    """Export format for reports."""
+    PDF = "pdf"
+    XLSX = "xlsx"
+    CSV = "csv"
+
+
+class ReportScheduleStatus(str, Enum):
+    """Status of a report schedule."""
+    ACTIVE = "active"
+    PAUSED = "paused"
+    COMPLETED = "completed"
+    FAILED = "failed"

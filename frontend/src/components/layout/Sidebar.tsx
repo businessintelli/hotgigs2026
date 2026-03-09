@@ -127,6 +127,7 @@ const mspNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Analytics', href: '/msp/analytics' },
       { icon: DocumentChartBarIcon, label: 'Reports', href: '/reports' },
       { icon: ChartBarIcon, label: 'Aggregate Reports', href: '/msp/aggregate-reports' },
+      { icon: DocumentChartBarIcon, label: 'Custom Reports', href: '/msp/custom-reports', roleRequired: 'admin' },
       { icon: Cog6ToothIcon, label: 'Settings', href: '/settings' },
       { icon: ShieldExclamationIcon, label: 'Admin', href: '/admin', roleRequired: 'admin' },
     ],
@@ -268,6 +269,7 @@ const defaultNavigation: NavGroup[] = [
     items: [
       { icon: DocumentChartBarIcon, label: 'Reports', href: '/reports' },
       { icon: ChartBarIcon, label: 'Aggregate Reports', href: '/aggregate-reports' },
+      { icon: DocumentChartBarIcon, label: 'Custom Reports', href: '/custom-reports', roleRequired: 'admin' },
       { icon: Cog6ToothIcon, label: 'Settings', href: '/settings' },
       { icon: ShieldExclamationIcon, label: 'Admin', href: '/admin', roleRequired: 'admin' },
     ],
