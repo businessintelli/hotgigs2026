@@ -31,6 +31,9 @@ import {
   CloudArrowUpIcon,
   ArrowDownTrayIcon,
   BeakerIcon,
+  FunnelIcon,
+  BellIcon,
+  ClipboardDocumentCheckIcon,
 } from '@heroicons/react/24/outline';
 import { useUIStore } from '@/store/uiStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -95,6 +98,9 @@ const mspNavigation: NavGroup[] = [
       { icon: CheckCircleIcon, label: 'Onboarding', href: '/msp/onboarding' },
       { icon: StarIcon, label: 'Interview Insights', href: '/msp/interview-insights' },
       { icon: DocumentTextIcon, label: 'Resume Hub', href: '/msp/resume-hub' },
+      { icon: FunnelIcon, label: 'Pipeline Analytics', href: '/msp/pipeline-analytics' },
+      { icon: BellIcon, label: 'Notifications', href: '/msp/candidate-notifications' },
+      { icon: ClipboardDocumentCheckIcon, label: 'Feedback Forms', href: '/msp/interview-feedback' },
     ],
   },
   {
@@ -240,6 +246,9 @@ const defaultNavigation: NavGroup[] = [
       { icon: CheckCircleIcon, label: 'Onboarding', href: '/onboarding' },
       { icon: StarIcon, label: 'Interview Insights', href: '/interview-insights' },
       { icon: DocumentTextIcon, label: 'Resume Hub', href: '/resume-hub' },
+      { icon: FunnelIcon, label: 'Pipeline Analytics', href: '/pipeline-analytics' },
+      { icon: BellIcon, label: 'Notifications', href: '/candidate-notifications' },
+      { icon: ClipboardDocumentCheckIcon, label: 'Feedback Forms', href: '/interview-feedback' },
     ],
   },
   {

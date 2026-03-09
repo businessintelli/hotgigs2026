@@ -50,6 +50,9 @@ import { TestingDashboard } from '@/pages/TestingDashboard';
 
 // Resume Hub
 import { ResumeHub } from '@/pages/ResumeHub';
+import { PipelineAnalytics } from '@/pages/PipelineAnalytics';
+import { CandidateNotifications } from '@/pages/CandidateNotifications';
+import { InterviewFeedbackForms } from '@/pages/InterviewFeedbackForms';
 
 // Data Operations Pages
 import { BulkImportCenter } from '@/pages/BulkImportCenter';
@@ -178,6 +181,9 @@ function App() {
           <Route path="/custom-reports" element={<AuthenticatedLayout title="Custom Report Builder"><CustomReportBuilder /></AuthenticatedLayout>} />
           <Route path="/testing-dashboard" element={<AuthenticatedLayout title="E2E Testing Dashboard"><TestingDashboard /></AuthenticatedLayout>} />
           <Route path="/resume-hub" element={<AuthenticatedLayout title="Resume Hub"><ResumeHub /></AuthenticatedLayout>} />
+          <Route path="/pipeline-analytics" element={<AuthenticatedLayout title="Pipeline Analytics"><PipelineAnalytics /></AuthenticatedLayout>} />
+          <Route path="/candidate-notifications" element={<AuthenticatedLayout title="Candidate Notifications"><CandidateNotifications /></AuthenticatedLayout>} />
+          <Route path="/interview-feedback" element={<AuthenticatedLayout title="Interview Feedback Forms"><InterviewFeedbackForms /></AuthenticatedLayout>} />
 
           {/* Data Operations Routes */}
           <Route path="/bulk-import" element={<AuthenticatedLayout title="Bulk Import Center"><BulkImportCenter /></AuthenticatedLayout>} />
@@ -317,6 +323,21 @@ function App() {
           <Route path="/msp/resume-hub" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Resume Hub"><ResumeHub /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/pipeline-analytics" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Pipeline Analytics"><PipelineAnalytics /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/candidate-notifications" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Candidate Notifications"><CandidateNotifications /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/interview-feedback" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Interview Feedback Forms"><InterviewFeedbackForms /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

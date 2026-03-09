@@ -52,6 +52,7 @@ from api.v1 import (
     custom_reports,
     test_agent,
     resume_processing,
+    pipeline_analytics,
 )
 
 logger = logging.getLogger(__name__)
@@ -143,6 +144,9 @@ router.include_router(test_agent.router)
 
 # ── Resume Processing (thumbnails, PDF conversion, tracking, condensation) ──
 router.include_router(resume_processing.router, tags=["Resume Processing"])
+
+# ── Pipeline Analytics, Email Notifications, Interview Feedback ──
+router.include_router(pipeline_analytics.router, tags=["Pipeline Analytics & Notifications"])
 
 
 @router.get("", tags=["Status"])

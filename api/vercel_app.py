@@ -567,6 +567,7 @@ except Exception as e:
         ("custom_reports", "Custom Reports"),
         ("test_agent", "Testing Agent"),
         ("resume_processing", "Resume Processing"),
+        ("pipeline_analytics", "Pipeline Analytics & Notifications"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")
