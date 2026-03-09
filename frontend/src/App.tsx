@@ -48,6 +48,9 @@ import { CustomReportBuilder } from '@/pages/CustomReportBuilder';
 // Testing Dashboard
 import { TestingDashboard } from '@/pages/TestingDashboard';
 
+// Resume Hub
+import { ResumeHub } from '@/pages/ResumeHub';
+
 // Data Operations Pages
 import { BulkImportCenter } from '@/pages/BulkImportCenter';
 import { BulkAnalysisDashboard } from '@/pages/BulkAnalysisDashboard';
@@ -174,6 +177,7 @@ function App() {
           <Route path="/aggregate-reports" element={<AuthenticatedLayout title="Aggregate Reports"><AggregateReports /></AuthenticatedLayout>} />
           <Route path="/custom-reports" element={<AuthenticatedLayout title="Custom Report Builder"><CustomReportBuilder /></AuthenticatedLayout>} />
           <Route path="/testing-dashboard" element={<AuthenticatedLayout title="E2E Testing Dashboard"><TestingDashboard /></AuthenticatedLayout>} />
+          <Route path="/resume-hub" element={<AuthenticatedLayout title="Resume Hub"><ResumeHub /></AuthenticatedLayout>} />
 
           {/* Data Operations Routes */}
           <Route path="/bulk-import" element={<AuthenticatedLayout title="Bulk Import Center"><BulkImportCenter /></AuthenticatedLayout>} />
@@ -308,6 +312,11 @@ function App() {
           <Route path="/msp/testing-dashboard" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="E2E Testing Dashboard"><TestingDashboard /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/resume-hub" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Resume Hub"><ResumeHub /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

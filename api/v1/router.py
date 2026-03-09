@@ -51,6 +51,7 @@ from api.v1 import (
     aggregate_reports,
     custom_reports,
     test_agent,
+    resume_processing,
 )
 
 logger = logging.getLogger(__name__)
@@ -139,6 +140,9 @@ router.include_router(custom_reports.router, tags=["Custom Reports"])
 
 # ── E2E Testing Agent ──
 router.include_router(test_agent.router)
+
+# ── Resume Processing (thumbnails, PDF conversion, tracking, condensation) ──
+router.include_router(resume_processing.router, tags=["Resume Processing"])
 
 
 @router.get("", tags=["Status"])

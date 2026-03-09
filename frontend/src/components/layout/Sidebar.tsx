@@ -94,6 +94,7 @@ const mspNavigation: NavGroup[] = [
       { icon: DocumentTextIcon, label: 'Offers', href: '/msp/offers' },
       { icon: CheckCircleIcon, label: 'Onboarding', href: '/msp/onboarding' },
       { icon: StarIcon, label: 'Interview Insights', href: '/msp/interview-insights' },
+      { icon: DocumentTextIcon, label: 'Resume Hub', href: '/msp/resume-hub' },
     ],
   },
   {
@@ -238,6 +239,7 @@ const defaultNavigation: NavGroup[] = [
       { icon: DocumentTextIcon, label: 'Offers', href: '/offers' },
       { icon: CheckCircleIcon, label: 'Onboarding', href: '/onboarding' },
       { icon: StarIcon, label: 'Interview Insights', href: '/interview-insights' },
+      { icon: DocumentTextIcon, label: 'Resume Hub', href: '/resume-hub' },
     ],
   },
   {
