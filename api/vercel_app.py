@@ -568,6 +568,9 @@ except Exception as e:
         ("test_agent", "Testing Agent"),
         ("resume_processing", "Resume Processing"),
         ("pipeline_analytics", "Pipeline Analytics & Notifications"),
+        ("msp_billing", "MSP Billing & Cascading Invoices"),
+        ("bgc_onboarding", "BGC & Onboarding"),
+        ("asset_management", "Asset Management"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

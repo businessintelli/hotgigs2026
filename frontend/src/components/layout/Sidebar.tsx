@@ -80,6 +80,9 @@ const mspNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Rate Cards', href: '/msp/rate-cards' },
       { icon: ShieldExclamationIcon, label: 'Compliance', href: '/msp/compliance' },
       { icon: ExclamationTriangleIcon, label: 'SLA Monitoring', href: '/msp/sla' },
+      { icon: DocumentChartBarIcon, label: 'MSP Billing', href: '/msp/billing' },
+      { icon: ClipboardDocumentCheckIcon, label: 'BGC & Onboarding', href: '/msp/bgc-onboarding' },
+      { icon: BuildingOffice2Icon, label: 'Asset Management', href: '/msp/asset-management' },
     ],
   },
   {

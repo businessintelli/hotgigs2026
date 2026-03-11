@@ -53,6 +53,9 @@ from api.v1 import (
     test_agent,
     resume_processing,
     pipeline_analytics,
+    msp_billing,
+    bgc_onboarding,
+    asset_management,
 )
 
 logger = logging.getLogger(__name__)
@@ -147,6 +150,15 @@ router.include_router(resume_processing.router, tags=["Resume Processing"])
 
 # ── Pipeline Analytics, Email Notifications, Interview Feedback ──
 router.include_router(pipeline_analytics.router, tags=["Pipeline Analytics & Notifications"])
+
+# ── MSP Tiered Billing & Cascading Invoicing ──
+router.include_router(msp_billing.router, tags=["MSP Billing & Cascading Invoices"])
+
+# ── Background Check (BGC) & Onboarding Workflows ──
+router.include_router(bgc_onboarding.router, tags=["BGC & Onboarding"])
+
+# ── Asset Allocation & Management ──
+router.include_router(asset_management.router, tags=["Asset Management"])
 
 
 @router.get("", tags=["Status"])

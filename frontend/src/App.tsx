@@ -59,6 +59,11 @@ import { BulkImportCenter } from '@/pages/BulkImportCenter';
 import { BulkAnalysisDashboard } from '@/pages/BulkAnalysisDashboard';
 import { ExportCenter } from '@/pages/ExportCenter';
 
+// New Feature Pages — MSP Billing, BGC/Onboarding, Asset Management
+import { MSPBillingCenter } from '@/pages/MSPBillingCenter';
+import { BGCOnboarding } from '@/pages/BGCOnboarding';
+import { AssetManagement } from '@/pages/AssetManagement';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -189,6 +194,11 @@ function App() {
           <Route path="/bulk-import" element={<AuthenticatedLayout title="Bulk Import Center"><BulkImportCenter /></AuthenticatedLayout>} />
           <Route path="/bulk-analysis" element={<AuthenticatedLayout title="Bulk Analysis Dashboard"><BulkAnalysisDashboard /></AuthenticatedLayout>} />
           <Route path="/export-center" element={<AuthenticatedLayout title="Export Center"><ExportCenter /></AuthenticatedLayout>} />
+
+          {/* MSP Billing, BGC/Onboarding, Asset Management */}
+          <Route path="/msp-billing" element={<AuthenticatedLayout title="MSP Billing Center"><MSPBillingCenter /></AuthenticatedLayout>} />
+          <Route path="/bgc-onboarding" element={<AuthenticatedLayout title="BGC & Onboarding"><BGCOnboarding /></AuthenticatedLayout>} />
+          <Route path="/asset-management" element={<AuthenticatedLayout title="Asset Management"><AssetManagement /></AuthenticatedLayout>} />
 
           {/* MSP Portal Routes */}
           <Route path="/msp/dashboard" element={
@@ -338,6 +348,23 @@ function App() {
           <Route path="/msp/interview-feedback" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Interview Feedback Forms"><InterviewFeedbackForms /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP Billing, BGC & Asset Routes */}
+          <Route path="/msp/billing" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="MSP Billing Center"><MSPBillingCenter /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/bgc-onboarding" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="BGC & Onboarding"><BGCOnboarding /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/asset-management" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Asset Management"><AssetManagement /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 
