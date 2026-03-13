@@ -577,6 +577,7 @@ except Exception as e:
         ("mom_action_items", "MOM & Action Items"),
         ("app_admin_config", "App Admin Configuration"),
         ("company_admin_config", "Company Admin Configuration"),
+        ("financial_reports", "Financial Reports"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

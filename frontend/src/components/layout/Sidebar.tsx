@@ -34,6 +34,10 @@ import {
   FunnelIcon,
   BellIcon,
   ClipboardDocumentCheckIcon,
+  CurrencyDollarIcon,
+  BanknotesIcon,
+  CalculatorIcon,
+  ScaleIcon,
 } from '@heroicons/react/24/outline';
 import { useUIStore } from '@/store/uiStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -118,6 +122,16 @@ const mspNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/msp/recruiter-dashboard' },
       { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/msp/applicant-tracker' },
       { icon: ChartBarIcon, label: 'AI Predictions', href: '/msp/ai-predictions' },
+    ],
+  },
+  {
+    label: 'FINANCIALS',
+    items: [
+      { icon: CurrencyDollarIcon, label: 'P&L / Balance Sheet', href: '/msp/financial-statements' },
+      { icon: BanknotesIcon, label: 'Revenue & Expenses', href: '/msp/revenue-expense' },
+      { icon: ScaleIcon, label: 'AR / AP Aging', href: '/msp/receivables-payables' },
+      { icon: CalculatorIcon, label: 'Associate 360°', href: '/msp/associate-financials' },
+      { icon: ChartBarIcon, label: 'Revenue Analytics', href: '/msp/revenue-analytics' },
     ],
   },
   {
@@ -268,6 +282,16 @@ const defaultNavigation: NavGroup[] = [
       { icon: ChartBarIcon, label: 'Recruiter Dashboard', href: '/recruiter-dashboard' },
       { icon: ChartBarIcon, label: 'Applicant Tracker', href: '/applicant-tracker' },
       { icon: ChartBarIcon, label: 'AI Predictions', href: '/ai-predictions' },
+    ],
+  },
+  {
+    label: 'FINANCIALS',
+    items: [
+      { icon: CurrencyDollarIcon, label: 'P&L / Balance Sheet', href: '/financial-statements' },
+      { icon: BanknotesIcon, label: 'Revenue & Expenses', href: '/revenue-expense' },
+      { icon: ScaleIcon, label: 'AR / AP Aging', href: '/receivables-payables' },
+      { icon: CalculatorIcon, label: 'Associate 360°', href: '/associate-financials' },
+      { icon: ChartBarIcon, label: 'Revenue Analytics', href: '/revenue-analytics' },
     ],
   },
   {

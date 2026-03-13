@@ -73,6 +73,13 @@ import { NotificationCollabHub } from '@/pages/NotificationCollabHub';
 import { CompanyAdminConfig } from '@/pages/CompanyAdminConfig';
 import { AppAdminConfig } from '@/pages/AppAdminConfig';
 
+// Financial Reports
+import { ProfitAndLoss } from '@/pages/ProfitAndLoss';
+import { RevenueExpenseBreakdown } from '@/pages/RevenueExpenseBreakdown';
+import { ReceivablesPayables } from '@/pages/ReceivablesPayables';
+import { AssociateFinancials } from '@/pages/AssociateFinancials';
+import { RevenueAnalytics } from '@/pages/RevenueAnalytics';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -217,6 +224,13 @@ function App() {
           {/* Admin Configuration */}
           <Route path="/company-admin" element={<AuthenticatedLayout title="Company Admin"><CompanyAdminConfig /></AuthenticatedLayout>} />
           <Route path="/app-admin" element={<AuthenticatedLayout title="App Admin"><AppAdminConfig /></AuthenticatedLayout>} />
+
+          {/* Financial Reports */}
+          <Route path="/financial-statements" element={<AuthenticatedLayout title="Financial Statements"><ProfitAndLoss /></AuthenticatedLayout>} />
+          <Route path="/revenue-expense" element={<AuthenticatedLayout title="Revenue & Expenses"><RevenueExpenseBreakdown /></AuthenticatedLayout>} />
+          <Route path="/receivables-payables" element={<AuthenticatedLayout title="Receivables & Payables"><ReceivablesPayables /></AuthenticatedLayout>} />
+          <Route path="/associate-financials" element={<AuthenticatedLayout title="Associate Financials"><AssociateFinancials /></AuthenticatedLayout>} />
+          <Route path="/revenue-analytics" element={<AuthenticatedLayout title="Revenue Analytics"><RevenueAnalytics /></AuthenticatedLayout>} />
 
           {/* MSP Portal Routes */}
           <Route path="/msp/dashboard" element={
@@ -400,6 +414,33 @@ function App() {
           <Route path="/msp/asset-management" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Asset Management"><AssetManagement /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP Financial Reports */}
+          <Route path="/msp/financial-statements" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Financial Statements"><ProfitAndLoss /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/revenue-expense" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Revenue & Expenses"><RevenueExpenseBreakdown /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/receivables-payables" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Receivables & Payables"><ReceivablesPayables /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/associate-financials" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Associate Financials"><AssociateFinancials /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/revenue-analytics" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Revenue Analytics"><RevenueAnalytics /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

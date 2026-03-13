@@ -62,6 +62,7 @@ from api.v1 import (
     mom_action_items,
     app_admin_config,
     company_admin_config,
+    financial_reports,
 )
 
 logger = logging.getLogger(__name__)
@@ -175,6 +176,9 @@ router.include_router(mom_action_items.router, tags=["MOM & Action Items"])
 # ── Admin Configuration (App + Company Level) ──
 router.include_router(app_admin_config.router, tags=["App Admin Configuration"])
 router.include_router(company_admin_config.router, tags=["Company Admin Configuration"])
+
+# ── Financial Reports — P&L, Balance Sheet, AR/AP, Associate 360° ──
+router.include_router(financial_reports.router, tags=["Financial Reports"])
 
 
 @router.get("", tags=["Status"])
