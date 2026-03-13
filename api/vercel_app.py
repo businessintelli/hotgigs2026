@@ -571,6 +571,10 @@ except Exception as e:
         ("msp_billing", "MSP Billing & Cascading Invoices"),
         ("bgc_onboarding", "BGC & Onboarding"),
         ("asset_management", "Asset Management"),
+        ("email_agent", "Email Agent"),
+        ("email_resume_processor", "Email Resume Processing"),
+        ("notification_hub", "Notification Hub"),
+        ("mom_action_items", "MOM & Action Items"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

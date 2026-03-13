@@ -64,6 +64,11 @@ import { MSPBillingCenter } from '@/pages/MSPBillingCenter';
 import { BGCOnboarding } from '@/pages/BGCOnboarding';
 import { AssetManagement } from '@/pages/AssetManagement';
 
+// Email Agent, Resume Match, Notification Hub
+import { EmailAgentCenter } from '@/pages/EmailAgentCenter';
+import { ResumeMatchCenter } from '@/pages/ResumeMatchCenter';
+import { NotificationCollabHub } from '@/pages/NotificationCollabHub';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -199,6 +204,11 @@ function App() {
           <Route path="/msp-billing" element={<AuthenticatedLayout title="MSP Billing Center"><MSPBillingCenter /></AuthenticatedLayout>} />
           <Route path="/bgc-onboarding" element={<AuthenticatedLayout title="BGC & Onboarding"><BGCOnboarding /></AuthenticatedLayout>} />
           <Route path="/asset-management" element={<AuthenticatedLayout title="Asset Management"><AssetManagement /></AuthenticatedLayout>} />
+
+          {/* Email Agent, Resume Match, Notification Hub */}
+          <Route path="/email-agent" element={<AuthenticatedLayout title="Email Agent"><EmailAgentCenter /></AuthenticatedLayout>} />
+          <Route path="/resume-match" element={<AuthenticatedLayout title="Resume Match Center"><ResumeMatchCenter /></AuthenticatedLayout>} />
+          <Route path="/notification-hub" element={<AuthenticatedLayout title="Notification Hub"><NotificationCollabHub /></AuthenticatedLayout>} />
 
           {/* MSP Portal Routes */}
           <Route path="/msp/dashboard" element={
@@ -348,6 +358,23 @@ function App() {
           <Route path="/msp/interview-feedback" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Interview Feedback Forms"><InterviewFeedbackForms /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP Email Agent, Resume Match, Notification Hub */}
+          <Route path="/msp/email-agent" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Email Agent"><EmailAgentCenter /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/resume-match" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Resume Match Center"><ResumeMatchCenter /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/notification-hub" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Notification Hub"><NotificationCollabHub /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

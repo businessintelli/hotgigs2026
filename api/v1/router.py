@@ -56,6 +56,10 @@ from api.v1 import (
     msp_billing,
     bgc_onboarding,
     asset_management,
+    email_agent,
+    email_resume_processor,
+    notification_hub,
+    mom_action_items,
 )
 
 logger = logging.getLogger(__name__)
@@ -159,6 +163,12 @@ router.include_router(bgc_onboarding.router, tags=["BGC & Onboarding"])
 
 # ── Asset Allocation & Management ──
 router.include_router(asset_management.router, tags=["Asset Management"])
+
+# ── Email Agent & Intelligence ──
+router.include_router(email_agent.router, tags=["Email Agent"])
+router.include_router(email_resume_processor.router, tags=["Email Resume Processing"])
+router.include_router(notification_hub.router, tags=["Notification Hub"])
+router.include_router(mom_action_items.router, tags=["MOM & Action Items"])
 
 
 @router.get("", tags=["Status"])

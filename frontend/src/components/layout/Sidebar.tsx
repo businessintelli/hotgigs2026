@@ -89,6 +89,9 @@ const mspNavigation: NavGroup[] = [
     label: 'AI TOOLS',
     items: [
       { icon: SparklesIcon, label: 'AI Copilot', href: '/copilot' },
+      { icon: InboxIcon, label: 'Email Agent', href: '/msp/email-agent' },
+      { icon: DocumentTextIcon, label: 'Resume Match', href: '/msp/resume-match' },
+      { icon: BellIcon, label: 'Notification Hub', href: '/msp/notification-hub' },
     ],
   },
   {
