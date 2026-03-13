@@ -145,6 +145,8 @@ const mspNavigation: NavGroup[] = [
       { icon: BeakerIcon, label: 'Testing Dashboard', href: '/msp/testing-dashboard', roleRequired: 'admin' },
       { icon: Cog6ToothIcon, label: 'Settings', href: '/settings' },
       { icon: ShieldExclamationIcon, label: 'Admin', href: '/admin', roleRequired: 'admin' },
+      { icon: BuildingOffice2Icon, label: 'Company Admin', href: '/company-admin', roleRequired: 'admin' },
+      { icon: Cog6ToothIcon, label: 'App Admin', href: '/app-admin', roleRequired: 'admin' },
     ],
   },
 ];
@@ -292,6 +294,8 @@ const defaultNavigation: NavGroup[] = [
       { icon: BeakerIcon, label: 'Testing Dashboard', href: '/testing-dashboard', roleRequired: 'admin' },
       { icon: Cog6ToothIcon, label: 'Settings', href: '/settings' },
       { icon: ShieldExclamationIcon, label: 'Admin', href: '/admin', roleRequired: 'admin' },
+      { icon: BuildingOffice2Icon, label: 'Company Admin', href: '/company-admin', roleRequired: 'admin' },
+      { icon: Cog6ToothIcon, label: 'App Admin', href: '/app-admin', roleRequired: 'admin' },
     ],
   },
 ];

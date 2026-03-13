@@ -575,6 +575,8 @@ except Exception as e:
         ("email_resume_processor", "Email Resume Processing"),
         ("notification_hub", "Notification Hub"),
         ("mom_action_items", "MOM & Action Items"),
+        ("app_admin_config", "App Admin Configuration"),
+        ("company_admin_config", "Company Admin Configuration"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

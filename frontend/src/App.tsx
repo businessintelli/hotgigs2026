@@ -69,6 +69,10 @@ import { EmailAgentCenter } from '@/pages/EmailAgentCenter';
 import { ResumeMatchCenter } from '@/pages/ResumeMatchCenter';
 import { NotificationCollabHub } from '@/pages/NotificationCollabHub';
 
+// Admin Configuration (App + Company Level)
+import { CompanyAdminConfig } from '@/pages/CompanyAdminConfig';
+import { AppAdminConfig } from '@/pages/AppAdminConfig';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -209,6 +213,10 @@ function App() {
           <Route path="/email-agent" element={<AuthenticatedLayout title="Email Agent"><EmailAgentCenter /></AuthenticatedLayout>} />
           <Route path="/resume-match" element={<AuthenticatedLayout title="Resume Match Center"><ResumeMatchCenter /></AuthenticatedLayout>} />
           <Route path="/notification-hub" element={<AuthenticatedLayout title="Notification Hub"><NotificationCollabHub /></AuthenticatedLayout>} />
+
+          {/* Admin Configuration */}
+          <Route path="/company-admin" element={<AuthenticatedLayout title="Company Admin"><CompanyAdminConfig /></AuthenticatedLayout>} />
+          <Route path="/app-admin" element={<AuthenticatedLayout title="App Admin"><AppAdminConfig /></AuthenticatedLayout>} />
 
           {/* MSP Portal Routes */}
           <Route path="/msp/dashboard" element={

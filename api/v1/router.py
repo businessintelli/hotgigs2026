@@ -60,6 +60,8 @@ from api.v1 import (
     email_resume_processor,
     notification_hub,
     mom_action_items,
+    app_admin_config,
+    company_admin_config,
 )
 
 logger = logging.getLogger(__name__)
@@ -169,6 +171,10 @@ router.include_router(email_agent.router, tags=["Email Agent"])
 router.include_router(email_resume_processor.router, tags=["Email Resume Processing"])
 router.include_router(notification_hub.router, tags=["Notification Hub"])
 router.include_router(mom_action_items.router, tags=["MOM & Action Items"])
+
+# ── Admin Configuration (App + Company Level) ──
+router.include_router(app_admin_config.router, tags=["App Admin Configuration"])
+router.include_router(company_admin_config.router, tags=["Company Admin Configuration"])
 
 
 @router.get("", tags=["Status"])
