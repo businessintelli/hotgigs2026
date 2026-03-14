@@ -80,6 +80,11 @@ import { ReceivablesPayables } from '@/pages/ReceivablesPayables';
 import { AssociateFinancials } from '@/pages/AssociateFinancials';
 import { RevenueAnalytics } from '@/pages/RevenueAnalytics';
 
+// Agreement Management
+import { AgreementCenter } from '@/pages/AgreementCenter';
+import { AgreementBuilder } from '@/pages/AgreementBuilder';
+import { ESignaturePortal } from '@/pages/ESignaturePortal';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -224,6 +229,11 @@ function App() {
           {/* Admin Configuration */}
           <Route path="/company-admin" element={<AuthenticatedLayout title="Company Admin"><CompanyAdminConfig /></AuthenticatedLayout>} />
           <Route path="/app-admin" element={<AuthenticatedLayout title="App Admin"><AppAdminConfig /></AuthenticatedLayout>} />
+
+          {/* Agreement Management */}
+          <Route path="/agreements" element={<AuthenticatedLayout title="Agreement Center"><AgreementCenter /></AuthenticatedLayout>} />
+          <Route path="/agreement-builder" element={<AuthenticatedLayout title="Agreement Builder"><AgreementBuilder /></AuthenticatedLayout>} />
+          <Route path="/e-signatures" element={<AuthenticatedLayout title="E-Signature Portal"><ESignaturePortal /></AuthenticatedLayout>} />
 
           {/* Financial Reports */}
           <Route path="/financial-statements" element={<AuthenticatedLayout title="Financial Statements"><ProfitAndLoss /></AuthenticatedLayout>} />
@@ -414,6 +424,23 @@ function App() {
           <Route path="/msp/asset-management" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Asset Management"><AssetManagement /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP Agreement Management */}
+          <Route path="/msp/agreements" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Agreement Center"><AgreementCenter /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/agreement-builder" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Agreement Builder"><AgreementBuilder /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/e-signatures" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="E-Signature Portal"><ESignaturePortal /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

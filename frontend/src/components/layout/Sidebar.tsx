@@ -90,6 +90,14 @@ const mspNavigation: NavGroup[] = [
     ],
   },
   {
+    label: 'AGREEMENTS',
+    items: [
+      { icon: DocumentDuplicateIcon, label: 'Agreement Center', href: '/msp/agreements' },
+      { icon: DocumentTextIcon, label: 'Agreement Builder', href: '/msp/agreement-builder' },
+      { icon: ClipboardDocumentCheckIcon, label: 'E-Signatures', href: '/msp/e-signatures' },
+    ],
+  },
+  {
     label: 'AI TOOLS',
     items: [
       { icon: SparklesIcon, label: 'AI Copilot', href: '/copilot' },
@@ -250,6 +258,14 @@ const defaultNavigation: NavGroup[] = [
       { icon: DocumentDuplicateIcon, label: 'Contracts', href: '/contracts' },
       { icon: BuildingLibraryIcon, label: 'Suppliers', href: '/suppliers' },
       { icon: FaceSmileIcon, label: 'Referrals', href: '/referrals' },
+    ],
+  },
+  {
+    label: 'AGREEMENTS',
+    items: [
+      { icon: DocumentDuplicateIcon, label: 'Agreement Center', href: '/agreements' },
+      { icon: DocumentTextIcon, label: 'Agreement Builder', href: '/agreement-builder' },
+      { icon: ClipboardDocumentCheckIcon, label: 'E-Signatures', href: '/e-signatures' },
     ],
   },
   {

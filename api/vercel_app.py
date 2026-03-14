@@ -578,6 +578,7 @@ except Exception as e:
         ("app_admin_config", "App Admin Configuration"),
         ("company_admin_config", "Company Admin Configuration"),
         ("financial_reports", "Financial Reports"),
+        ("agreements", "Agreements & E-Signature"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")

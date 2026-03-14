@@ -63,6 +63,7 @@ from api.v1 import (
     app_admin_config,
     company_admin_config,
     financial_reports,
+    agreements,
 )
 
 logger = logging.getLogger(__name__)
@@ -179,6 +180,9 @@ router.include_router(company_admin_config.router, tags=["Company Admin Configur
 
 # ── Financial Reports — P&L, Balance Sheet, AR/AP, Associate 360° ──
 router.include_router(financial_reports.router, tags=["Financial Reports"])
+
+# ── Agreements — MSA, NDA, SOW, PO, Templates, E-Signature ──
+router.include_router(agreements.router, tags=["Agreements & E-Signature"])
 
 
 @router.get("", tags=["Status"])
