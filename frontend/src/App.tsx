@@ -88,6 +88,7 @@ import { ESignaturePortal } from '@/pages/ESignaturePortal';
 // Interview Feedback & Score Intelligence
 import { DetailedFeedbackCollector } from '@/pages/DetailedFeedbackCollector';
 import { CandidateScoreIntelligence } from '@/pages/CandidateScoreIntelligence';
+import ScoreAnalyticsDashboard from '@/pages/ScoreAnalyticsDashboard';
 
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
@@ -242,6 +243,7 @@ function App() {
           {/* Interview Feedback & Score Intelligence */}
           <Route path="/detailed-feedback" element={<AuthenticatedLayout title="Detailed Feedback"><DetailedFeedbackCollector /></AuthenticatedLayout>} />
           <Route path="/score-intelligence" element={<AuthenticatedLayout title="Score Intelligence"><CandidateScoreIntelligence /></AuthenticatedLayout>} />
+          <Route path="/score-analytics" element={<AuthenticatedLayout title="Score Analytics"><ScoreAnalyticsDashboard /></AuthenticatedLayout>} />
 
           {/* Financial Reports */}
           <Route path="/financial-statements" element={<AuthenticatedLayout title="Financial Statements"><ProfitAndLoss /></AuthenticatedLayout>} />
@@ -461,6 +463,11 @@ function App() {
           <Route path="/msp/score-intelligence" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="Score Intelligence"><CandidateScoreIntelligence /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/score-analytics" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Score Analytics"><ScoreAnalyticsDashboard /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

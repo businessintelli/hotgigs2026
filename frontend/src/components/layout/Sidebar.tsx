@@ -121,6 +121,7 @@ const mspNavigation: NavGroup[] = [
       { icon: ClipboardDocumentCheckIcon, label: 'Feedback Forms', href: '/msp/interview-feedback' },
       { icon: ClipboardDocumentListIcon, label: 'Detailed Feedback', href: '/msp/detailed-feedback' },
       { icon: StarIcon, label: 'Score Intelligence', href: '/msp/score-intelligence' },
+      { icon: ChartBarIcon, label: 'Score Analytics', href: '/msp/score-analytics' },
     ],
   },
   {
@@ -291,6 +292,7 @@ const defaultNavigation: NavGroup[] = [
       { icon: ClipboardDocumentCheckIcon, label: 'Feedback Forms', href: '/interview-feedback' },
       { icon: ClipboardDocumentListIcon, label: 'Detailed Feedback', href: '/detailed-feedback' },
       { icon: StarIcon, label: 'Score Intelligence', href: '/score-intelligence' },
+      { icon: ChartBarIcon, label: 'Score Analytics', href: '/score-analytics' },
     ],
   },
   {
