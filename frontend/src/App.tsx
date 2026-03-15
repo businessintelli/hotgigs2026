@@ -85,6 +85,10 @@ import { AgreementCenter } from '@/pages/AgreementCenter';
 import { AgreementBuilder } from '@/pages/AgreementBuilder';
 import { ESignaturePortal } from '@/pages/ESignaturePortal';
 
+// Interview Feedback & Score Intelligence
+import { DetailedFeedbackCollector } from '@/pages/DetailedFeedbackCollector';
+import { CandidateScoreIntelligence } from '@/pages/CandidateScoreIntelligence';
+
 // MSP Pages
 import { MSPDashboard } from '@/pages/msp/MSPDashboard';
 import { ClientsList } from '@/pages/msp/ClientsList';
@@ -234,6 +238,10 @@ function App() {
           <Route path="/agreements" element={<AuthenticatedLayout title="Agreement Center"><AgreementCenter /></AuthenticatedLayout>} />
           <Route path="/agreement-builder" element={<AuthenticatedLayout title="Agreement Builder"><AgreementBuilder /></AuthenticatedLayout>} />
           <Route path="/e-signatures" element={<AuthenticatedLayout title="E-Signature Portal"><ESignaturePortal /></AuthenticatedLayout>} />
+
+          {/* Interview Feedback & Score Intelligence */}
+          <Route path="/detailed-feedback" element={<AuthenticatedLayout title="Detailed Feedback"><DetailedFeedbackCollector /></AuthenticatedLayout>} />
+          <Route path="/score-intelligence" element={<AuthenticatedLayout title="Score Intelligence"><CandidateScoreIntelligence /></AuthenticatedLayout>} />
 
           {/* Financial Reports */}
           <Route path="/financial-statements" element={<AuthenticatedLayout title="Financial Statements"><ProfitAndLoss /></AuthenticatedLayout>} />
@@ -441,6 +449,18 @@ function App() {
           <Route path="/msp/e-signatures" element={
             <OrgTypeGuard allowedTypes={['msp']}>
               <AuthenticatedLayout title="E-Signature Portal"><ESignaturePortal /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+
+          {/* MSP Interview Feedback & Score Intelligence */}
+          <Route path="/msp/detailed-feedback" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Detailed Feedback"><DetailedFeedbackCollector /></AuthenticatedLayout>
+            </OrgTypeGuard>
+          } />
+          <Route path="/msp/score-intelligence" element={
+            <OrgTypeGuard allowedTypes={['msp']}>
+              <AuthenticatedLayout title="Score Intelligence"><CandidateScoreIntelligence /></AuthenticatedLayout>
             </OrgTypeGuard>
           } />
 

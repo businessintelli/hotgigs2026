@@ -119,6 +119,8 @@ const mspNavigation: NavGroup[] = [
       { icon: FunnelIcon, label: 'Pipeline Analytics', href: '/msp/pipeline-analytics' },
       { icon: BellIcon, label: 'Notifications', href: '/msp/candidate-notifications' },
       { icon: ClipboardDocumentCheckIcon, label: 'Feedback Forms', href: '/msp/interview-feedback' },
+      { icon: ClipboardDocumentListIcon, label: 'Detailed Feedback', href: '/msp/detailed-feedback' },
+      { icon: StarIcon, label: 'Score Intelligence', href: '/msp/score-intelligence' },
     ],
   },
   {
@@ -287,6 +289,8 @@ const defaultNavigation: NavGroup[] = [
       { icon: FunnelIcon, label: 'Pipeline Analytics', href: '/pipeline-analytics' },
       { icon: BellIcon, label: 'Notifications', href: '/candidate-notifications' },
       { icon: ClipboardDocumentCheckIcon, label: 'Feedback Forms', href: '/interview-feedback' },
+      { icon: ClipboardDocumentListIcon, label: 'Detailed Feedback', href: '/detailed-feedback' },
+      { icon: StarIcon, label: 'Score Intelligence', href: '/score-intelligence' },
     ],
   },
   {
