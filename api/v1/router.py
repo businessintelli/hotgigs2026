@@ -65,6 +65,7 @@ from api.v1 import (
     financial_reports,
     agreements,
     interview_feedback_detail,
+    screening_feedback,
 )
 
 logger = logging.getLogger(__name__)
@@ -187,6 +188,9 @@ router.include_router(agreements.router, tags=["Agreements & E-Signature"])
 
 # ── Detailed Interview Feedback, Persistent Scoring & Job Match Intelligence ──
 router.include_router(interview_feedback_detail.router, tags=["Interview Feedback & Scoring"])
+
+# ── Screening Feedback — Recruiter-level screening at application/import/management time ──
+router.include_router(screening_feedback.router, tags=["Screening Feedback"])
 
 
 @router.get("", tags=["Status"])

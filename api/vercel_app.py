@@ -580,6 +580,7 @@ except Exception as e:
         ("financial_reports", "Financial Reports"),
         ("agreements", "Agreements & E-Signature"),
         ("interview_feedback_detail", "Interview Feedback & Scoring"),
+        ("screening_feedback", "Screening Feedback"),
     ]:
         try:
             mod = importlib.import_module(f"api.v1.{name}")
