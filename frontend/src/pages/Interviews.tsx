@@ -14,6 +14,29 @@ const typeColors: Record<string, string> = {
 };
 const recColors: Record<string, string> = { strong_hire: 'bg-emerald-600', hire: 'bg-emerald-500', maybe: 'bg-amber-500', no_hire: 'bg-red-500', strong_no_hire: 'bg-red-700' };
 
+/* ─── screening status enrichment (from /screening-feedback API) ─── */
+const screeningLookup: Record<number, { status: string; score: number; date: string }> = {
+  1: { status: 'screened', score: 78, date: '2026-03-10' },     // Rajesh Kumar
+  2: { status: 'shortlisted', score: 92, date: '2026-03-10' },  // Emily Chen
+  3: { status: 'hold', score: 58, date: '2026-03-11' },         // Marcus Johnson
+  4: { status: 'pending', score: 0, date: '2026-03-14' },       // Priya Sharma
+  5: { status: 'not_screened', score: 0, date: '' },             // Alex Torres
+  6: { status: 'not_screened', score: 0, date: '' },             // Nina Patel
+};
+const screeningBadgeCls = (s: string) => {
+  switch (s) {
+    case 'shortlisted': return 'bg-emerald-600 text-white';
+    case 'screened': return 'bg-emerald-100 text-emerald-800';
+    case 'hold': return 'bg-amber-100 text-amber-800';
+    case 'rejected': return 'bg-red-100 text-red-800';
+    case 'pending': return 'bg-orange-100 text-orange-700';
+    default: return 'bg-neutral-100 text-neutral-400';
+  }
+};
+const screeningIcon = (s: string) => {
+  switch (s) { case 'shortlisted': return '★'; case 'screened': return '✓'; case 'hold': return '⏸'; case 'rejected': return '✗'; case 'pending': return '…'; default: return ''; }
+};
+
 /* ─── mock data ─── */
 const mockInterviews = [
   { id: 101, candidate_id: 1, candidate_name: 'Rajesh Kumar', requirement_id: 201, requirement_title: 'Senior Python Developer — TechCorp', interview_type: 'phone_screen', status: 'completed', scheduled_at: '2026-03-10T10:00:00Z', duration_minutes: 45, interviewer: 'Sarah Mitchell', ai_score: 4.2, rating: 4, feedback_submitted: true, feedback_session_id: 1, scores: { technical: 85, communication: 80, immigration: 65, job_fit: 82 }, recommendation: 'hire' },
@@ -106,6 +129,7 @@ export const Interviews: React.FC = () => {
               <th className="text-left py-3 px-4 text-xs text-neutral-500 font-medium">Interviewer</th>
               <th className="text-left py-3 px-4 text-xs text-neutral-500 font-medium">Scheduled</th>
               <th className="text-center py-3 px-4 text-xs text-neutral-500 font-medium">Score</th>
+              <th className="text-center py-3 px-4 text-xs text-neutral-500 font-medium">Screening</th>
               <th className="text-left py-3 px-4 text-xs text-neutral-500 font-medium">Status</th>
               <th className="text-center py-3 px-4 text-xs text-neutral-500 font-medium">Feedback</th>
               <th className="text-left py-3 px-4 text-xs text-neutral-500 font-medium">Actions</th>
@@ -116,7 +140,14 @@ export const Interviews: React.FC = () => {
               <React.Fragment key={i.id}>
                 <tr className="border-b border-neutral-100 hover:bg-neutral-50 cursor-pointer" onClick={() => setExpandedId(expandedId === i.id ? null : i.id)}>
                   <td className="py-3 px-4">
-                    <p className="font-medium text-neutral-900">{i.candidate_name}</p>
+                    <p className="font-medium text-neutral-900">
+                      {i.candidate_name}
+                      {(() => { const sc = screeningLookup[i.candidate_id]; return sc ? (
+                        <span className={`ml-1.5 text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${screeningBadgeCls(sc.status)}`}>
+                          {screeningIcon(sc.status)} {sc.status === 'not_screened' ? 'not screened' : sc.status}
+                        </span>
+                      ) : null; })()}
+                    </p>
                     <p className="text-[10px] text-neutral-400">ID: {i.candidate_id}</p>
                   </td>
                   <td className="py-3 px-4 text-xs text-neutral-600 max-w-[200px] truncate">{i.requirement_title}</td>
@@ -131,6 +162,14 @@ export const Interviews: React.FC = () => {
                     {i.ai_score ? (
                       <span className="text-sm font-bold text-violet-700">{i.ai_score}</span>
                     ) : <span className="text-neutral-300">—</span>}
+                  </td>
+                  <td className="py-3 px-4 text-center">
+                    {(() => { const sc = screeningLookup[i.candidate_id]; if (!sc || sc.status === 'not_screened') return <a href="/screening-feedback" className="text-[10px] text-violet-600 hover:underline">Screen</a>; return (
+                      <div className="flex flex-col items-center gap-0.5">
+                        {sc.score > 0 && <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${scoreBg(sc.score)}`}>{sc.score}</span>}
+                        {sc.status === 'pending' && <span className="text-[9px] text-orange-600">draft</span>}
+                      </div>
+                    ); })()}
                   </td>
                   <td className="py-3 px-4">
                     <span className={`text-[10px] px-2 py-0.5 rounded-full ${statusColors[i.status]}`}>{i.status.replace(/_/g, ' ')}</span>
@@ -161,7 +200,7 @@ export const Interviews: React.FC = () => {
 
                 {/* Expanded detail row */}
                 {expandedId === i.id && (
-                  <tr><td colSpan={9} className="bg-neutral-50 p-5">
+                  <tr><td colSpan={10} className="bg-neutral-50 p-5">
                     <div className="grid grid-cols-4 gap-6">
                       {/* Interview Details */}
                       <div>
@@ -238,9 +277,27 @@ export const Interviews: React.FC = () => {
                             className="px-3 py-1.5 bg-white text-neutral-600 text-xs rounded-lg border border-neutral-200 hover:bg-neutral-50">
                             Score Profile
                           </a>
+                          <a href="/screening-feedback"
+                            className="px-3 py-1.5 bg-white text-violet-600 text-xs rounded-lg border border-violet-200 hover:bg-violet-50">
+                            Screening
+                          </a>
                         </div>
                       </div>
                     </div>
+                    {/* Screening info row */}
+                    {(() => { const sc = screeningLookup[i.candidate_id]; if (!sc || sc.status === 'not_screened') return null; return (
+                      <div className="mt-3 pt-3 border-t border-neutral-200">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-semibold text-neutral-700">Screening:</span>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${screeningBadgeCls(sc.status)}`}>
+                            {screeningIcon(sc.status)} {sc.status}
+                          </span>
+                          {sc.score > 0 && <span className={`text-xs font-bold px-2 py-0.5 rounded ${scoreBg(sc.score)}`}>{sc.score}/100</span>}
+                          {sc.date && <span className="text-[10px] text-neutral-400">screened {sc.date}</span>}
+                          <a href="/screening-feedback" className="text-[10px] text-violet-600 hover:underline ml-auto">View Full Screening</a>
+                        </div>
+                      </div>
+                    ); })()}
                   </td></tr>
                 )}
               </React.Fragment>

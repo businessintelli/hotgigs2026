@@ -21,18 +21,37 @@ const recColors: Record<string, string> = {
   no_hire: 'bg-red-500', strong_no_hire: 'bg-red-700',
 };
 
-/* ─── mock enrichment data (feedback scores, persistent scores) ─── */
+/* ─── screening status badge helpers ─── */
+const screeningBadgeCls = (status: string) => {
+  switch (status) {
+    case 'shortlisted': return 'bg-emerald-600 text-white';
+    case 'screened': return 'bg-emerald-100 text-emerald-800';
+    case 'hold': return 'bg-amber-100 text-amber-800';
+    case 'rejected': return 'bg-red-100 text-red-800';
+    case 'pending': return 'bg-orange-100 text-orange-700';
+    default: return 'bg-neutral-100 text-neutral-400';
+  }
+};
+const screeningIcon = (status: string) => {
+  switch (status) {
+    case 'shortlisted': return '★'; case 'screened': return '✓'; case 'hold': return '⏸';
+    case 'rejected': return '✗'; case 'pending': return '…'; default: return '';
+  }
+};
+
+/* ─── mock enrichment data (feedback scores, persistent scores, screening status) ─── */
 const candidateScoreEnrichment: Record<string, {
   fitScore: number; techScore: number; commScore: number; immigScore: number;
   feedbackCount: number; recommendation: string | null; skills: { name: string; score: number }[];
   riskFactors: string[]; hasFeedback: boolean; sharedWithSubmission: boolean;
+  screeningStatus: string; screeningScore: number;
 }> = {
-  // These would come from the /interview-feedback/job-match and /persistent-scores APIs
-  'Rajesh Kumar': { fitScore: 82, techScore: 85, commScore: 80, immigScore: 65, feedbackCount: 2, recommendation: 'hire', skills: [{ name: 'Python', score: 90 }, { name: 'SQL', score: 80 }, { name: 'AWS', score: 60 }], riskFactors: ['H1B transfer needed'], hasFeedback: true, sharedWithSubmission: true },
-  'Emily Chen': { fitScore: 91, techScore: 92, commScore: 90, immigScore: 100, feedbackCount: 1, recommendation: 'strong_hire', skills: [{ name: 'Python', score: 100 }, { name: 'SQL', score: 80 }, { name: 'System Design', score: 80 }], riskFactors: ['Rate at top of budget'], hasFeedback: true, sharedWithSubmission: true },
-  'Marcus Johnson': { fitScore: 58, techScore: 62, commScore: 72, immigScore: 40, feedbackCount: 1, recommendation: 'maybe', skills: [{ name: 'React', score: 80 }, { name: 'Python', score: 60 }, { name: 'SQL', score: 60 }], riskFactors: ['OPT expiring', 'Wants remote — role is hybrid'], hasFeedback: true, sharedWithSubmission: false },
-  'Priya Sharma': { fitScore: 0, techScore: 0, commScore: 0, immigScore: 0, feedbackCount: 0, recommendation: null, skills: [], riskFactors: [], hasFeedback: false, sharedWithSubmission: false },
-  'Alex Torres': { fitScore: 0, techScore: 0, commScore: 0, immigScore: 0, feedbackCount: 0, recommendation: null, skills: [], riskFactors: [], hasFeedback: false, sharedWithSubmission: false },
+  // These would come from the /interview-feedback/job-match, /persistent-scores, and /screening-feedback/records APIs
+  'Rajesh Kumar': { fitScore: 82, techScore: 85, commScore: 80, immigScore: 65, feedbackCount: 2, recommendation: 'hire', skills: [{ name: 'Python', score: 90 }, { name: 'SQL', score: 80 }, { name: 'AWS', score: 60 }], riskFactors: ['H1B transfer needed'], hasFeedback: true, sharedWithSubmission: true, screeningStatus: 'screened', screeningScore: 78 },
+  'Emily Chen': { fitScore: 91, techScore: 92, commScore: 90, immigScore: 100, feedbackCount: 1, recommendation: 'strong_hire', skills: [{ name: 'Python', score: 100 }, { name: 'SQL', score: 80 }, { name: 'System Design', score: 80 }], riskFactors: ['Rate at top of budget'], hasFeedback: true, sharedWithSubmission: true, screeningStatus: 'shortlisted', screeningScore: 92 },
+  'Marcus Johnson': { fitScore: 58, techScore: 62, commScore: 72, immigScore: 40, feedbackCount: 1, recommendation: 'maybe', skills: [{ name: 'React', score: 80 }, { name: 'Python', score: 60 }, { name: 'SQL', score: 60 }], riskFactors: ['OPT expiring', 'Wants remote — role is hybrid'], hasFeedback: true, sharedWithSubmission: false, screeningStatus: 'hold', screeningScore: 58 },
+  'Priya Sharma': { fitScore: 0, techScore: 0, commScore: 0, immigScore: 0, feedbackCount: 0, recommendation: null, skills: [], riskFactors: [], hasFeedback: false, sharedWithSubmission: false, screeningStatus: 'pending', screeningScore: 0 },
+  'Alex Torres': { fitScore: 0, techScore: 0, commScore: 0, immigScore: 0, feedbackCount: 0, recommendation: null, skills: [], riskFactors: [], hasFeedback: false, sharedWithSubmission: false, screeningStatus: 'not_screened', screeningScore: 0 },
 };
 
 const submissionStages = [
@@ -133,7 +152,12 @@ export const Submissions: React.FC = () => {
                           onClick={() => setExpandedId(expandedId === submission.id ? null : submission.id)}>
                           <td className="py-2 px-2 text-xs text-neutral-400">{idx + 1}</td>
                           <td className="py-2 px-2">
-                            <p className="font-medium text-neutral-900 dark:text-white">{name}</p>
+                            <p className="font-medium text-neutral-900 dark:text-white">
+                              {name}
+                              <span className={`ml-1.5 text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${screeningBadgeCls(e.screeningStatus)}`}>
+                                {screeningIcon(e.screeningStatus)} {e.screeningStatus === 'not_screened' ? 'not screened' : e.screeningStatus}
+                              </span>
+                            </p>
                             {e.hasFeedback && e.fitScore > 0 && (
                               <span className={`text-[9px] px-1.5 py-0.5 rounded-full mt-0.5 inline-block ${fitScoreBg(e.fitScore)}`}>
                                 {fitLabel(e.fitScore)}
@@ -294,9 +318,14 @@ export const Submissions: React.FC = () => {
                     <div key={submission.id}
                       className={`p-3 rounded-lg ${stage.color} cursor-move hover:shadow-md transition-shadow duration-250`}>
                       <div className="flex items-start justify-between">
-                        <p className="font-medium text-sm text-neutral-900 dark:text-white">
-                          {submission.candidate.first_name} {submission.candidate.last_name}
-                        </p>
+                        <div>
+                          <p className="font-medium text-sm text-neutral-900 dark:text-white">
+                            {submission.candidate.first_name} {submission.candidate.last_name}
+                          </p>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${screeningBadgeCls(e.screeningStatus)}`}>
+                            {screeningIcon(e.screeningStatus)} {e.screeningStatus === 'not_screened' ? 'not screened' : e.screeningStatus}
+                          </span>
+                        </div>
                         {/* Fit score badge */}
                         {e.fitScore > 0 && (
                           <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${fitScoreBg(e.fitScore)}`}>
